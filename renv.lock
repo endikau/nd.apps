@@ -9,7 +9,7 @@
     ]
   },
   "Python": {
-    "Version": "3.11.14",
+    "Version": "3.12.12",
     "Type": "virtualenv",
     "Name": "./venv"
   },
@@ -3073,7 +3073,7 @@
     },
     "reticulate": {
       "Package": "reticulate",
-      "Version": "1.44.1",
+      "Version": "1.45.0",
       "Source": "Repository",
       "Type": "Package",
       "Title": "Interface to 'Python'",

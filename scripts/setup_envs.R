@@ -45,17 +45,15 @@ renv::install("reticulate", prompt = FALSE)
 
 python_pyenv_path <- reticulate::install_python("3.12:latest", force = FALSE)
 
-if(!reticulate::virtualenv_exists("./venv")){
+if (!reticulate::virtualenv_exists("./venv")) {
   reticulate::virtualenv_create(
     envname = "./venv",
     python = python_pyenv_path,
-    requiremens = (
-      if(fs::file_exists("requirements.txt")){
-        "requirements.txt"
-      }else{
-        NULL
-      }
-    )
+    requiremens = (if (fs::file_exists("requirements.txt")) {
+      "requirements.txt"
+    } else {
+      NULL
+    })
   )
 }
 python_venv_path <- reticulate::virtualenv_python("./venv")
@@ -71,7 +69,3 @@ helprrr::setenv_persist(
 )
 
 renv::snapshot(prompt = FALSE)
-
-yaml::read_yaml("environment.yml") |>
-  purrr::discard_at("prefix") |>
-  yaml::write_yaml("environment.yml")
