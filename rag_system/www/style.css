@@ -1,0 +1,81 @@
+.chat-stream {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 12px;
+  border-radius: 6px;
+  min-height: 360px;
+  max-height: 360px;
+  overflow-y: auto;
+  font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sources-list {
+  margin-top: 8px;
+}
+
+.chat-row {
+  display: flex;
+  width: 100%;
+}
+
+.chat-row.user {
+  justify-content: flex-end;
+}
+
+.chat-row.assistant {
+  justify-content: flex-start;
+}
+
+.chat-bubble {
+  max-width: 85%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  line-height: 1.4;
+  word-break: break-word;
+  background: #1f2937;
+  border: 1px solid #1e293b;
+}
+
+.chat-bubble.user {
+  background: #2563eb;
+  color: #e2e8f0;
+  border-color: #1d4ed8;
+}
+
+.chat-bubble.assistant {
+  background: #111827;
+  color: #e5e7eb;
+  border-color: #1f2937;
+}
+
+.chat-role {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.chat-text {
+  font-size: 14px;
+}
+
+.source-ref {
+  cursor: pointer;
+  text-decoration: underline dotted;
+}
+
+.tooltip-inner {
+  max-width: 480px;
+  text-align: left;
+  white-space: normal;
+}
+
+.tooltip.show {
+  opacity: 1;
+}
+
+.loading-brain {
+  display: inline-block;
+}

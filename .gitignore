@@ -3,3 +3,5 @@
 .Rhistory
 renv
 .stfolder
+node_modules/
+venv/

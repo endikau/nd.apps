@@ -53,6 +53,27 @@ element_input_doc <- tags$div(
         "font-family: var(--bs-font-monospace); padding: 8px 16px;"
       ),
       rows="5", spellcheck="false", example_review
+    ),
+    # tags$div(
+    #   id="input_doc_text", 
+    #   class="shiny-input-textarea form-control", 
+    #   contenteditable="true", 
+    #   rows="5", 
+    #   spellcheck="false",
+    #   style=stri_c(
+    #     "width:100%; resize:none; border:0; border-radius: 0; ",
+    #     "font-family: var(--bs-font-monospace); padding: 8px 16px;"
+    #   ), 
+    #   example_review
+    # ),
+    tags$script(
+      "function twemojiParse( element ) {",
+      "  twemoji.parse( element, { base: '/assets/vendor/twemoji/', folder: 'svg', ext: '.svg' } ); ",
+      "}",
+      "const inputDocText = document.getElementById('input_doc_text');",
+      "inputDocText.addEventListener('input', function() {",
+      "  twemojiParse(inputDocText);",
+      "});"
     )
   ),
   tags$div(

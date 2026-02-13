@@ -27,11 +27,7 @@ example_review <- paste0(
 )
 
 options(shiny.autoreload=TRUE)
-if(grepl("^hz126", Sys.info()["nodename"])){
-  shiny::shinyOptions(cache_pointer=cachem::cache_disk("cache/"))
-}else{
-  shiny::shinyOptions(cache_pointer=cachem::cache_mem())
-}
+shiny::shinyOptions(cache_pointer=cachem::cache_disk("./app_cache/"))
 shiny::addResourcePath("assets", here::here("nd.assets", "assets"))
 
 # spacy_model <- vns::load_spacy_model()
