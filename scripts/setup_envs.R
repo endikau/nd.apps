@@ -43,9 +43,12 @@ renv::install("reticulate", prompt = FALSE)
 #   return(.python_path)
 # })
 
+python_pyenv_path <- reticulate::install_python("3.12:latest", force = FALSE)
+
 if(!reticulate::virtualenv_exists("./venv")){
   reticulate::virtualenv_create(
     envname = "./venv",
+    python = python_pyenv_path,
     requiremens = (
       if(fs::file_exists("requirements.txt")){
         "requirements.txt"
@@ -55,16 +58,16 @@ if(!reticulate::virtualenv_exists("./venv")){
     )
   )
 }
-python_path <- reticulate::virtualenv_python("./venv")
+python_venv_path <- reticulate::virtualenv_python("./venv")
 
 cli::cli_alert_success("venv created")
 
-renv::use_python(python_path, type = "virtualenv")
+renv::use_python(python_venv_path, type = "virtualenv")
 
 renv::install("m-pilarski/helprrr", prompt = FALSE)
 helprrr::setenv_persist(
-  RETICULATE_PYTHON = python_path,
-  RENV_PYTHON = python_path
+  RETICULATE_PYTHON = python_venv_path,
+  RENV_PYTHON = python_venv_path
 )
 
 renv::snapshot(prompt = FALSE)
