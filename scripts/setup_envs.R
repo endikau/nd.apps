@@ -1,5 +1,3 @@
-`%0%` <- vctrs::`%0%`
-
 condaenv_name <- "nd.apps.condaenv"
 
 install.packages(
@@ -48,7 +46,13 @@ renv::install("reticulate", prompt = FALSE)
 if(!reticulate::virtualenv_exists("./venv")){
   reticulate::virtualenv_create(
     envname = "./venv",
-    requiremens = fs::dir_ls(".", regexp = "^requirements\\.txt$") %0% NULL
+    requiremens = (
+      if(fs::file_exists("requirements.txt")){
+        "requirements.txt"
+      }else{
+        NULL
+      }
+    )
   )
 }
 python_path <- reticulate::virtualenv_python("./venv")
