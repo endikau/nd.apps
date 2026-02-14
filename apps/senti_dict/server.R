@@ -74,7 +74,7 @@ function(input, output, session) {
           ) |>
           as.character()
 
-        .doc_pol_color <- .doc_pol_lab |> case_match(
+        .doc_pol_color <- .doc_pol_lab |> recode_values(
           "sen-pos-max"~"#009392",
           "sen-pos-med"~"#39b185",
           "sen-pos-min"~"#9ccb86",
@@ -91,7 +91,7 @@ function(input, output, session) {
           colorspace::lighten(0.9) |>
           colorspace::desaturate(0.5)
 
-        .doc_pol_emoji <- .doc_pol_lab |> case_match(
+        .doc_pol_emoji <- .doc_pol_lab |> recode_values(
           "sen-pos-max"~"assets/img/1f60d.svg",
           "sen-pos-med"~"assets/img/1f600.svg",
           "sen-pos-min"~"assets/img/1f642.svg",
@@ -102,7 +102,7 @@ function(input, output, session) {
           .default=NA_character_
         )
 
-        .doc_pol_text <- .doc_pol_lab |> case_match(
+        .doc_pol_text <- .doc_pol_lab |> recode_values(
           "sen-pos-max"~"Sehr positive Stimmung",
           "sen-pos-med"~"Positive Stimmung",
           "sen-pos-min"~"Schwach positive Stimmung",
@@ -177,7 +177,7 @@ function(input, output, session) {
         .by=tok_pol_lab_interval
       ) |>
       mutate(
-        text_pol_col = text_pol_lab |> as.character() |> case_match(
+        text_pol_col = text_pol_lab |> as.character() |> recode_values(
           "sen-pos-max"~"#009392",
           "sen-pos-med"~"#39b185",
           "sen-pos-min"~"#9ccb86",

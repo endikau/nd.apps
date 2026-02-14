@@ -2,7 +2,10 @@ library(shiny)
 library(arrow)
 library(htmltools)
 
-shiny::addResourcePath("assets", here::here("nd.assets", "assets"))
+shiny::addResourcePath(
+  prefix = "assets",
+  directoryPath = here::here("node_modules", "@endikau", "nd_assets", "dist")
+)
 
 file_path <- "fixed_SMALL_google_news_sentiment.parquet"
 data <- read_parquet(file_path)

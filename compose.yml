@@ -1,23 +1,13 @@
 services:
-  static_render:
-    container_name: static_render
+  shiny_serve:
+    container_name: shiny_serve
     # image: nd_site-render_static:latest
     # build:
     #   context: .
     #   dockerfile: Dockerfile
     # pull_policy: never
-    image: ghcr.io/endikau/nd_site-static_render:latest
+    ports:
+      - 12346:3838
+    image: ghcr.io/endikau/nd_apps-shiny_serve:latest
     volumes:
-      - .:/project
-    command: |
-      quarto render && exit 0
-  static_serve:
-    container_name: static_serve
-    image: joseluisq/static-web-server:2-alpine
-    restart: unless-stopped
-    ports: 
-      - 12345:80
-    environment:
-      - SERVER_ROOT=/var/public
-    volumes:
-      - ./_public:/var/public:ro
+      - .:/srv/shiny-server/apps/

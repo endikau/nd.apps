@@ -69,7 +69,7 @@ function(input, output, session) {
         # .pars <<- .pars
 
         .doc_pol_lab <- .pars$doc_class_lab |>
-          case_match(
+          recode_values(
             "positiv" ~ "sen-pos-med",
             "neutral" ~ "sen-neu",
             "negativ" ~ "sen-neg-med",
@@ -77,7 +77,7 @@ function(input, output, session) {
           )
 
         .doc_pol_color <- .doc_pol_lab |>
-          case_match(
+          recode_values(
             "sen-pos-max" ~ "#009392",
             "sen-pos-med" ~ "#39b185",
             "sen-pos-min" ~ "#9ccb86",
@@ -95,7 +95,7 @@ function(input, output, session) {
           colorspace::desaturate(0.5)
 
         .doc_pol_emoji <- .doc_pol_lab |>
-          case_match(
+          recode_values(
             "sen-pos-max" ~ "assets/img/1f60d.svg",
             "sen-pos-med" ~ "assets/img/1f600.svg",
             "sen-pos-min" ~ "assets/img/1f642.svg",
@@ -107,7 +107,7 @@ function(input, output, session) {
           )
 
         .doc_pol_text <- .doc_pol_lab |>
-          case_match(
+          recode_values(
             "sen-pos-max" ~ "Sehr positive Stimmung",
             "sen-pos-med" ~ "Positive Stimmung",
             "sen-pos-min" ~ "Schwach positive Stimmung",

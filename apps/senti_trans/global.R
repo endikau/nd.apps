@@ -28,8 +28,10 @@ example_review <- paste0(
 
 options(shiny.autoreload=TRUE)
 shiny::shinyOptions(cache_pointer=cachem::cache_disk("./app_cache/"))
-shiny::addResourcePath("assets", here::here("nd.assets", "assets"))
-
+shiny::addResourcePath(
+  prefix = "assets",
+  directoryPath = here::here("node_modules", "@endikau", "nd_assets", "dist")
+)
 # spacy_model <- vns::load_spacy_model()
 
 # parse_doc_spacy_memo_full <- memoise::memoise(

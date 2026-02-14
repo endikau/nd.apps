@@ -15,7 +15,10 @@ example_review <- paste0(
 
 options(shiny.autoreload=TRUE)
 shiny::shinyOptions(cache_pointer=cachem::cache_mem())
-shiny::addResourcePath("assets", here::here("nd.assets", "assets"))
+shiny::addResourcePath(
+  prefix = "assets",
+  directoryPath = here::here("node_modules", "@endikau", "nd_assets", "dist")
+)
 
 random_review <- function(){
   with(dplyr::slice_sample(vns.data::amazon_review_tbl, n=1), {

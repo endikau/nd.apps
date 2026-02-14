@@ -5,8 +5,10 @@ library(SnowballC)
 library(udpipe)
 library(here)
 
-shiny::addResourcePath("assets", here::here("nd.assets", "assets"))
-
+shiny::addResourcePath(
+  prefix = "assets",
+  directoryPath = here::here("node_modules", "@endikau", "nd_assets", "dist")
+)
 
 ### demo texts (could add a few more)
 demo_texts <- c(

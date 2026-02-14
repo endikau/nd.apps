@@ -8,7 +8,7 @@ test <- # gt::render_gt({
   dplyr::mutate(
     tok_pol_lab = tok_pol_lab |>
       as.character() |>
-      dplyr::case_match(
+      dplyr::recode_values(
         "sen-pos-max" ~ "#009392",
         "sen-pos-med" ~ "#39b185",
         "sen-pos-min" ~ "#9ccb86",

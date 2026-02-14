@@ -7,7 +7,7 @@ test <- # gt::render_gt({
   vns::calc_tok_sentidict_tbl(.doc_str=.doc_str, vns::sentidict_sws_tbl) |>
     dplyr::filter(tok_pol_lab != "sen-miss") |>
     dplyr::mutate(
-      tok_pol_lab = tok_pol_lab |> as.character() |> dplyr::case_match(
+      tok_pol_lab = tok_pol_lab |> as.character() |> dplyr::recode_values(
         "sen-pos-max"~"#009392",
         "sen-pos-med"~"#39b185",
         "sen-pos-min"~"#9ccb86",
