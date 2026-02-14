@@ -25,8 +25,15 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v5
         with:
-          file: Dockerfile
+          file: shiny_serve.Dockerfile
           context: .
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/nd_apps-shiny_serve:latest
 
+      - name: Build and push self-contained image
+        uses: docker/build-push-action@v5
+        with:
+          file: shiny_serve-sc.Dockerfile
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/nd_apps-shiny_serve-sc:latest

@@ -4,10 +4,10 @@ services:
     # image: nd_site-render_static:latest
     # build:
     #   context: .
-    #   dockerfile: Dockerfile
+    #   dockerfile: shiny_serve.Dockerfile
     # pull_policy: never
     ports:
       - 12346:3838
     image: ghcr.io/endikau/nd_apps-shiny_serve:latest
     volumes:
-      - .:/srv/shiny-server/apps/
+      - ./apps:/srv/shiny-server/apps/
