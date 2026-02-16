@@ -1,33 +1,37 @@
 install.packages(
   pkgs = setdiff(
-    c("renv", "callr", "cli"), 
+    c("renv", "callr", "cli"),
     rownames(installed.packages())
   ),
   repos = "https://cloud.r-project.org"
 )
 
-callr::r(\(...){
+callr::r(\(...) {
   renv::init(bare = TRUE)
 })
 
-callr::r(\(...){
+callr::r(\(...) {
   options(
-    renv.config.ppm.enabled = TRUE,
-    renv.config.ppm.default = TRUE,
-    renv.config.ppm.url = "https://packagemanager.posit.co/cran/latest"
+    # renv.config.ppm.enabled = TRUE,
+    # renv.config.ppm.default = TRUE,
+    # renv.config.ppm.url = "https://packagemanager.posit.co/cran/latest"
+    # repos = c(
+    #   PPM_MANYLINUX = "https://p3m.dev/cran/__linux__/manylinux_2_28/latest",
+    #   getOption("repos")
+    # )
   )
   renv::restore()
 })
 
-callr::r(\(...){
+callr::r(\(...) {
   renv::install(c("yaml", "reticulate", "m-pilarski/helprrr"), prompt = FALSE)
 })
 
 cli::cli_alert_success("renv")
 
-callr::r(\(...){
+callr::r(\(...) {
   .python_pyenv_path <- reticulate::install_python("3.12:latest", force = FALSE)
-  if (!reticulate::virtualenv_exists("./venv")) { 
+  if (!reticulate::virtualenv_exists("./venv")) {
     reticulate::virtualenv_create(
       envname = "./venv",
       python = .python_pyenv_path,
@@ -48,6 +52,8 @@ callr::r(\(...){
 
 cli::cli_alert_success("venv")
 
-callr::r(\(...){renv::snapshot(prompt = FALSE)})
+callr::r(\(...) {
+  renv::snapshot(prompt = FALSE)
+})
 
 cli::cli_alert_success("snapshot")
