@@ -1,3 +1,7 @@
+utils::install.packages(
+  setdiff("pak", rownames(utils::installed.packages()))
+)
+
 options(
   renv.config.pak.enabled = TRUE,
   renv.config.ppm.enabled = TRUE,
