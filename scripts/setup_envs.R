@@ -1,6 +1,6 @@
 install.packages(
   pkgs = setdiff(
-    c("renv", "callr", "cli"),
+    c("renv", "callr", "cli", "pak"),
     rownames(installed.packages())
   ),
   repos = "https://cloud.r-project.org"
