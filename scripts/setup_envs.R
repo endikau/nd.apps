@@ -7,19 +7,10 @@ install.packages(
 )
 
 callr::r(\(...) {
-  renv::init(bare = TRUE)
+  renv::activate()
 })
 
 callr::r(\(...) {
-  options(
-    # renv.config.ppm.enabled = TRUE,
-    # renv.config.ppm.default = TRUE,
-    # renv.config.ppm.url = "https://packagemanager.posit.co/cran/latest"
-    # repos = c(
-    #   PPM_MANYLINUX = "https://p3m.dev/cran/__linux__/manylinux_2_28/latest",
-    #   getOption("repos")
-    # )
-  )
   renv::restore()
 })
 
