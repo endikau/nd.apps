@@ -5,3 +5,4 @@ renv
 .stfolder
 node_modules/
 venv/
+.npmrc

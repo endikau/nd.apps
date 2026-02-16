@@ -15,6 +15,9 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -22,18 +25,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push image
-        uses: docker/build-push-action@v5
-        with:
-          file: shiny_serve.Dockerfile
-          context: .
-          push: true
-          tags: ghcr.io/${{ github.repository_owner }}/nd_apps-shiny_serve:latest
+      - name: Prepare npmrc secret
+        run: |
+          printf '%s' "${{ secrets.NPMRC_FILE }}" > /tmp/.npmrc
+        shell: bash
 
-      - name: Build and push self-contained image
-        uses: docker/build-push-action@v5
-        with:
-          file: shiny_serve-sc.Dockerfile
-          context: .
-          push: true
-          tags: ghcr.io/${{ github.repository_owner }}/nd_apps-shiny_serve-sc:latest
+      - name: Build and push image (tracked files only)
+        run: |
+          set -euo pipefail
+          git ls-files -z | tar --null -T - -cf - | docker buildx build \
+            --secret id=npmrc,src=/tmp/.npmrc \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            -f shiny_serve.Dockerfile \
+            -t ghcr.io/${{ github.repository_owner }}/nd_apps-shiny_serve:latest \
+            --push \
+            -
+        shell: bash
