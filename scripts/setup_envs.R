@@ -7,12 +7,7 @@ install.packages(
 )
 
 callr::r(\(...){
-  options(
-    renv.config.ppm.enabled = TRUE,
-    renv.config.ppm.default = TRUE,
-    renv.config.ppm.url = "https://packagemanager.posit.co/cran/latest"
-  )
-  renv::activate()
+  renv::init(bare = TRUE)
 })
 
 callr::r(\(...){
