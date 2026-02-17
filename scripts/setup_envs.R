@@ -15,7 +15,7 @@ local({
     reticulate::virtualenv_create(
       envname = "./venv",
       python = .python_pyenv_path,
-      requiremens = (if (fs::file_exists("requirements.txt")) {
+      requirements = (if (fs::file_exists("requirements.txt")) {
         "requirements.txt"
       } else {
         NULL
