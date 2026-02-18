@@ -75,7 +75,7 @@ function(input, output, session) {
           "positive"~"sen-pos-med",
           "neutral"~"sen-neu",
           "negative"~"sen-neg-med",
-          .default=NA_character_
+          default=NA_character_
         )
           
         .doc_pol_color <- .doc_pol_lab |> recode_values(
@@ -87,7 +87,7 @@ function(input, output, session) {
           "sen-neg-med"~"#e88471",
           "sen-neg-max"~"#cf597e",
           "sen-miss"~"#bababa",
-          .default=NA_character_
+          default=NA_character_
         )
 
         .doc_pol_bg <-
@@ -103,7 +103,7 @@ function(input, output, session) {
           "sen-neg-min"~"assets/img/1fae4.svg",
           "sen-neg-med"~"assets/img/1f97a.svg",
           "sen-neg-max"~"assets/img/1f62d.svg",
-          .default=NA_character_
+          default=NA_character_
         )
 
         .doc_pol_text <- .doc_pol_lab |> recode_values(
@@ -114,7 +114,7 @@ function(input, output, session) {
           "sen-neg-min"~"Schwach negative Stimmung",
           "sen-neg-med"~"Negative Stimmung",
           "sen-neg-max"~"Sehr negative Stimmung",
-          .default=NA_character_
+          default=NA_character_
         )
 
         list(tags$div(
