@@ -2,13 +2,13 @@ if(interactive()){
   setwd("~/Documents/endikau/endikau.shares/apps/senti_trans/")
 }
 
-tryCatch(
-  expr={vns::use_vns_condaenv()},
-  error=\(...){
-    vns::setup_vns_condaenv(.install_miniconda=TRUE, .create_condaenv=TRUE)
-    vns::use_vns_condaenv()
-  }
-)
+# tryCatch(
+#   expr={vns::use_vns_condaenv()},
+#   error=\(...){
+#     vns::setup_vns_condaenv(.install_miniconda=TRUE, .create_condaenv=TRUE)
+#     vns::use_vns_condaenv()
+#   }
+# )
 
 library(shiny)
 library(dplyr)
@@ -27,7 +27,7 @@ example_review <- paste0(
 )
 
 options(shiny.autoreload=TRUE)
-shiny::shinyOptions(cache_pointer=cachem::cache_disk("./app_cache/"))
+shiny::shinyOptions(cache_pointer=cachem::cache_disk(fs::dir_create("./app_cache/")))
 shiny::addResourcePath(
   prefix = "assets",
   directoryPath = here::here("node_modules", "@endikau", "nd_assets", "dist")
