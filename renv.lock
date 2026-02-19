@@ -2402,7 +2402,7 @@
       "RemoteUsername": "m-pilarski",
       "RemotePkgRef": "m-pilarski/nd.util",
       "RemoteRef": "HEAD",
-      "RemoteSha": "94c08d18aa5e5590daf66e836b4899c2eb40dee0",
+      "RemoteSha": "b33454f77c9bb5e89d8860ee886b750e00d1ccf4",
       "NeedsCompilation": "no",
       "Author": "Moritz Pilarski [aut, cre] (ORCID: YOUR-ORCID-ID)",
       "Maintainer": "Moritz Pilarski <moritz.pilarski@example.com>",
@@ -3749,10 +3749,10 @@
     },
     "tm": {
       "Package": "tm",
-      "Version": "0.7-17",
+      "Version": "0.7-18",
       "Source": "Repository",
       "Title": "Text Mining Package",
-      "Date": "2025-12-10",
+      "Date": "2026-02-18",
       "Authors@R": "c(person(\"Ingo\", \"Feinerer\", role = \"aut\", email = \"feinerer@logic.at\", comment = c(ORCID = \"0000-0001-7656-8338\")), person(\"Kurt\", \"Hornik\", role = c(\"aut\", \"cre\"), email = \"Kurt.Hornik@R-project.org\", comment = c(ORCID = \"0000-0003-4198-9911\")), person(\"Artifex Software, Inc.\", role = c(\"ctb\", \"cph\"), comment = \"pdf_info.ps taken from GPL Ghostscript\"))",
       "Depends": [
         "R (>= 3.4.0)",
