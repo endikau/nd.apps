@@ -27,7 +27,7 @@ example_review <- paste0(
 )
 
 options(shiny.autoreload=TRUE)
-shiny::shinyOptions(cache_pointer=cachem::cache_disk(fs::dir_create("./app_cache/")))
+# shiny::shinyOptions(cache_pointer=cachem::cache_disk(fs::dir_create("./app_cache/")))
 shiny::addResourcePath(
   prefix = "assets",
   directoryPath = here::here("node_modules", "@endikau", "nd_assets", "dist")
@@ -51,7 +51,7 @@ calc_doc_germansentiment_tbl_memo_full <- memoise::memoise(
     .f=vns::calc_doc_germansentiment_tbl,
     .germansentiment_model=germansentiment_model
   ),
-  cache=getShinyOption("cache_pointer")
+  # cache=getShinyOption("cache_pointer")
 )
 
 calc_doc_germansentiment_tbl_memo_each <- function(.doc_str){
