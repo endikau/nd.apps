@@ -10,6 +10,7 @@ if [[ ! -f "$NPMRC_PATH" ]]; then
 fi
 
 SECRET_ARG=(--secret "id=npmrc,src=$NPMRC_PATH")
+BUILDKIT_PROGRESS="${BUILDKIT_PROGRESS:-plain}"  # plain shows step-by-step logs
 
 # Ensure a buildx builder is available (required for streaming context + secrets).
 if ! docker buildx inspect >/dev/null 2>&1; then
@@ -26,8 +27,9 @@ build_tracked() {
   (
     cd "$ROOT_DIR"
     git ls-files -z | tar --null -T - -cf - | \
-      DOCKER_BUILDKIT=1 docker buildx build \
+      DOCKER_BUILDKIT=1 BUILDKIT_PROGRESS="$BUILDKIT_PROGRESS" docker buildx build \
         --load \
+        --progress "$BUILDKIT_PROGRESS" \
         "${SECRET_ARG[@]}" \
         -f "$df_name" \
         -t "$tag" \
@@ -35,6 +37,6 @@ build_tracked() {
   )
 }
 
-build_tracked "$ROOT_DIR/shiny_serve.Dockerfile" nd_apps-shiny_serve:local
+build_tracked "$ROOT_DIR/Dockerfile" nd_apps-shiny_serve:local
 
 echo "Done. Image tagged as nd_apps-shiny_serve:local"
