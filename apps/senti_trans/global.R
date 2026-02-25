@@ -1,7 +1,3 @@
-if(interactive()){
-  setwd("~/Documents/endikau/endikau.shares/apps/senti_trans/")
-}
-
 # tryCatch(
 #   expr={vns::use_vns_condaenv()},
 #   error=\(...){
@@ -50,7 +46,7 @@ calc_doc_germansentiment_tbl_memo_full <- memoise::memoise(
   f=purrr::partial(
     .f=vns::calc_doc_germansentiment_tbl,
     .germansentiment_model=germansentiment_model
-  ),
+  ) # ,
   # cache=getShinyOption("cache_pointer")
 )
 
