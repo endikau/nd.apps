@@ -6,6 +6,8 @@
 #   }
 # )
 
+reticulate::use_virtualenv("./venv")
+
 library(shiny)
 library(dplyr)
 library(purrr)
