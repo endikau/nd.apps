@@ -1,12 +1,8 @@
-# tryCatch(
-#   expr={vns::use_vns_condaenv()},
-#   error=\(...){
-#     vns::setup_vns_condaenv(.install_miniconda=TRUE, .create_condaenv=TRUE)
-#     vns::use_vns_condaenv()
-#   }
-# )
-
-reticulate::use_virtualenv("./venv")
+readRenviron(here::here(".Renviron"))
+shiny::addResourcePath(
+  prefix = "assets",
+  directoryPath = here::here("node_modules", "@endikau", "nd_assets", "dist")
+)
 
 library(shiny)
 library(dplyr)
@@ -26,10 +22,6 @@ example_review <- paste0(
 
 options(shiny.autoreload=TRUE)
 # shiny::shinyOptions(cache_pointer=cachem::cache_disk(fs::dir_create("./app_cache/")))
-shiny::addResourcePath(
-  prefix = "assets",
-  directoryPath = here::here("node_modules", "@endikau", "nd_assets", "dist")
-)
 # spacy_model <- vns::load_spacy_model()
 
 # parse_doc_spacy_memo_full <- memoise::memoise(
