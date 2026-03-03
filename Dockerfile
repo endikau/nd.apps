@@ -31,3 +31,5 @@ RUN curl -fsSL https://pyenv.run | bash \
   && echo 'eval "$(pyenv init - bash)"' >> ~/.profile
 
 RUN Rscript --vanilla scripts/setup_envs.R
+
+USER root
