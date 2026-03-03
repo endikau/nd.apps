@@ -36,6 +36,16 @@ detect_r_minor <- function() {
   paste0(R.version$major, ".", strsplit(R.version$minor, "\\.")[[1]][1])
 }
 
+ensure_user_lib <- function() {
+  user_lib <- Sys.getenv(
+    "R_LIBS_USER",
+    unset = file.path(Sys.getenv("HOME", "~"), "R", "library")
+  )
+  dir.create(user_lib, recursive = TRUE, showWarnings = FALSE)
+  .libPaths(c(user_lib, .libPaths()))
+  message("using R_LIBS_USER: ", user_lib)
+}
+
 ppm_binary_repo <- function(codename = "noble") {
   sprintf(
     "https://packagemanager.posit.co/cran/latest/bin/linux/%s-%s/%s",
@@ -83,6 +93,8 @@ print_install_opts <- function(opts) {
 
 # ---- Global options (parent + children) -------------------------------------
 
+ensure_user_lib()
+
 GLOBAL_R_OPTIONS <- make_global_options(target_codename = "noble")
 if (length(GLOBAL_R_OPTIONS)) {
   do.call(options, GLOBAL_R_OPTIONS)
@@ -101,9 +113,7 @@ run_in_callr <- function(expr, child_options = GLOBAL_R_OPTIONS) {
       eval(parse(text = expr_text), envir = .GlobalEnv)
     },
     args = list(expr_text = expr_text, child_options = child_options),
-    show = TRUE,
-    stdout = nullfile(),
-    stderr = nullfile()
+    show = TRUE
   )
 }
 

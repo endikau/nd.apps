@@ -16,7 +16,6 @@ RUN chown -R shiny:shiny /srv/shiny-server/apps
 USER shiny
 ENV HOME="/home/shiny"
 ENV R_LIBS_USER="$HOME/R/library"
-# ENV R_PROFILE_USER=/srv/shiny-server/apps/.Rprofile
 ENV PYENV_ROOT="$HOME/.pyenv"
 
 RUN mkdir -p "$R_LIBS_USER"
@@ -32,5 +31,3 @@ RUN curl -fsSL https://pyenv.run | bash \
   && echo 'eval "$(pyenv init - bash)"' >> ~/.profile
 
 RUN Rscript --vanilla scripts/setup_envs.R
-
-USER root
