@@ -15,11 +15,11 @@ RUN chown -R shiny:shiny /srv/shiny-server/apps
 
 USER shiny
 ENV HOME="/home/shiny"
-ENV R_LIBS_USER="$HOME/R/library"
-ENV PYENV_ROOT="$HOME/.pyenv"
 
+ENV R_LIBS_USER="$HOME/R/library"
 RUN mkdir -p "$R_LIBS_USER"
 
+ENV PYENV_ROOT="$HOME/.pyenv"
 RUN curl -fsSL https://pyenv.run | bash \
 #   && { [ -e '~/.bashrc' ] || touch '~/.bashrc'; } \
   && echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc \
