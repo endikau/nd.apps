@@ -4,44 +4,13 @@ library(bslib)
 ################################################################################
 
 icon_fa <- function(.fa_class){
-  htmltools::tags$i(class=.fa_class, role="resentation")
+  htmltools::tags$i(class=.fa_class, role="presentation")
 }
 
 ################################################################################
 
-legend_sentiment <- tags$svg(
-  width="100%", height="2.25rem",
-  tags$svg(
-    y="0",
-    height="0.875rem", width="100%", viewBox="0 0 7 1",
-    preserveAspectRatio="none",
-    tags$rect(x="0", y="0", width="1.01", height="1", fill="#cf597e"),
-    tags$rect(x="1", y="0", width="1.01", height="1", fill="#e88471"),
-    tags$rect(x="2", y="0", width="1.01", height="1", fill="#eeb479"),
-    tags$rect(x="3", y="0", width="1.01", height="1", fill="#e9e29c"),
-    tags$rect(x="4", y="0", width="1.01", height="1", fill="#9ccb86"),
-    tags$rect(x="5", y="0", width="1.01", height="1", fill="#39b185"),
-    tags$rect(x="6", y="0", width="1", height="1.5", fill="#009392"),
-  ),
-  tags$svg(
-    `alignment-baseline`="bottom", y="0%",
-    tags$text(
-      x="0%", y="2rem", `text-anchor`="start", `font-size`="0.875rem",
-      "negativ"
-    ),
-    tags$text(
-      x="50%", y="2rem", `text-anchor`="middle", `font-size`="0.875rem",
-      "neutral"
-    ),
-    tags$text(
-      x="100%", y="2rem", `text-anchor`="end", `font-size`="0.875rem",
-      "positiv"
-    )
-  )
-)
-
 element_input_doc <- tags$div(
-  class="card my-4",
+  class="card my-0",
   tags$div(class="card-header", "Text festlegen"),
   tags$div(
     class="form-group shiny-input-container z-index-5",

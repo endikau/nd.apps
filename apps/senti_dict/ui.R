@@ -4,7 +4,7 @@ library(bslib)
 ################################################################################
 
 icon_fa <- function(.fa_class){
-  htmltools::tags$i(class=.fa_class, role="resentation")
+  htmltools::tags$i(class=.fa_class, role="presentation")
 }
 
 ################################################################################
@@ -41,7 +41,7 @@ legend_sentiment <- tags$svg(
 )
 
 element_input_doc <- tags$div(
-  class="card my-4",
+  class="card my-0",
   tags$div(class="card-header", "Text festlegen"),
   tags$div(
     class="form-group shiny-input-container z-index-5",
