@@ -1,4 +1,6 @@
 # scripts/setup_envs.R
+dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
+.libPaths(Sys.getenv("R_LIBS_USER"))
 
 install.packages(
   pkgs = c("renv", "reticulate"),
