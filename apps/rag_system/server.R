@@ -1,5 +1,10 @@
 server <- function(input, output, session) {
   session_id <- paste0("shiny-", as.integer(Sys.time()), "-", sample(100000, 1))
+  rag <- nd.util::rag_client(
+    .base_url = BASE_URL,
+    .api_key = RAG_SERVICE_API_KEY,
+    .session_id = session_id
+  )
 
   rv <- reactiveValues(
     ingest_job = NULL,
@@ -16,7 +21,7 @@ server <- function(input, output, session) {
   observeEvent(TRUE, {
     tryCatch(
       {
-        rv$docs <- list_documents(session_id)
+        rv$docs <- rag$list_documents()
       },
       error = function(e) {
         rv$docs <- list()
@@ -32,7 +37,7 @@ server <- function(input, output, session) {
       label <- input$doc_label %||% NULL
       tryCatch(
         {
-          job_id <- ingest_async(pdf_paths, session_id, label = label, filenames = input$pdfs$name)
+          job_id <- rag$ingest_pdf_async(pdf_paths, .label = label, .filenames = input$pdfs$name)
           rv$ingest_job <- job_id
           rv$ingest_done <- FALSE
           rv$ingest_status <- list(status = "running", progress = 0, message = "Starte PDF-Ingest")
@@ -53,7 +58,7 @@ server <- function(input, output, session) {
       label <- input$doc_label %||% NULL
       tryCatch(
         {
-          job_id <- ingest_urls_async(url, session_id, label = label)
+          job_id <- rag$ingest_url_async(url, .label = label)
           rv$ingest_job <- job_id
           rv$ingest_done <- FALSE
           rv$ingest_status <- list(status = "running", progress = 0, message = "Starte URL-Ingest")
@@ -75,7 +80,7 @@ server <- function(input, output, session) {
     invalidateLater(1000)
     tryCatch(
       {
-        status <- poll_ingest(rv$ingest_job, session_id)
+        status <- rag$poll_ingest(rv$ingest_job)
         rv$ingest_status <- status
         if (status$status %in% c("succeeded", "failed")) {
           rv$ingest_done <- TRUE
@@ -88,7 +93,7 @@ server <- function(input, output, session) {
             showNotification("Ingest completed", type = "message")
             tryCatch(
               {
-                rv$docs <- list_documents(session_id)
+                rv$docs <- rag$list_documents()
               },
               error = function(e) {
                 showNotification(paste("Dokumente laden fehlgeschlagen:", e$message), type = "warning")
@@ -154,23 +159,9 @@ server <- function(input, output, session) {
     # Trigger client-side streaming fetch
     session$sendCustomMessage(
       "chat-start",
-      list(
-        base_url = BASE_URL,
-        session_id = session_id,
-        api_key = if (nzchar(RAG_SERVICE_API_KEY)) {
-          RAG_SERVICE_API_KEY
-        } else {
-          NULL
-        },
-        message = question,
-        history = current_history,
-        system_prompt = SYSTEM_PROMPT,
-        condense_prompt = CONDENSE_PROMPT,
-        context_prompt = CONTEXT_PROMPT,
-        context_refine_prompt = REFINE_PROMPT,
-        response_prompt = RESPONSE_PROMPT,
-        citation_qa_template = CITATION_QA_TEMPLATE,
-        citation_refine_template = CITATION_REFINE_TEMPLATE
+      rag$chat_stream_config(
+        .message = question,
+        .history = current_history
       )
     )
   })
@@ -181,7 +172,7 @@ server <- function(input, output, session) {
       return()
     }
     rv$answer <- res$answer %||% ""
-    rv$sources <- as_source_list(res$sources)
+    rv$sources <- nd.util::rag_source_list(res$sources)
     if (!is.null(rv$sources) && length(rv$sources) > 0) {
       cat("\n--- Verwendete Snippets ---\n")
       for (s in rv$sources) {
@@ -221,7 +212,7 @@ server <- function(input, output, session) {
   observeEvent(input$refresh_docs, {
     tryCatch(
       {
-        rv$docs <- list_documents(session_id)
+        rv$docs <- rag$list_documents()
       },
       error = function(e) {
         showNotification(paste("Dokumente laden fehlgeschlagen:", e$message), type = "error")
@@ -286,8 +277,8 @@ server <- function(input, output, session) {
     if (!nzchar(lbl)) return()
     tryCatch(
       {
-        delete_documents(lbl, session_id)
-        rv$docs <- list_documents(session_id)
+        rag$delete_documents(lbl)
+        rv$docs <- rag$list_documents()
         showNotification(paste("Gelöscht:", lbl), type = "message")
       },
       error = function(e) {
