@@ -1,5 +1,5 @@
 if (interactive()) {
-  setwd("~/Documents/endikau/nd.apps/senti_llm/")
+  setwd("~/Documents/endikau/nd.apps/apps/senti_llm/")
 }
 
 library(shiny)
@@ -57,8 +57,11 @@ calc_doc_senti_llm <- function(.doc_str) {
     "\n" %s+%
     "Wähle genau einen der drei Werte und gib keine weiteren Inhalte zurück."
 
-  chat <- ellmer::chat_openai_compatible(
+  ellmer::models_openai(base_url = base_url)
+
+  chat <- ellmer::chat_(
     model = "gwdg/gemma-3-27b-it",
+    # model = "jlu/gemma-4-26b-it",
     base_url = base_url,
     system_prompt = system_prompt
   )

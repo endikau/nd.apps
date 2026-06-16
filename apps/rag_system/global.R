@@ -1,5 +1,23 @@
 # ---- dependencies & config ------------------------------------------------
 
+APP_DIR <- local({
+  source_files <- vapply(sys.frames(), function(frame) {
+    file <- frame$ofile
+    if (is.null(file)) "" else file
+  }, character(1))
+  source_files <- source_files[nzchar(source_files)]
+  if (length(source_files)) {
+    dirname(normalizePath(tail(source_files, 1), mustWork = FALSE))
+  } else {
+    getwd()
+  }
+})
+
+app_renviron <- file.path(APP_DIR, ".Renviron")
+if (file.exists(app_renviron)) {
+  readRenviron(app_renviron)
+}
+
 library(shiny)
 library(bslib)
 library(httr2)
@@ -12,9 +30,15 @@ shiny::addResourcePath(
   directoryPath = here::here("node_modules", "@endikau", "nd_assets", "dist")
 )
 
+DEFAULT_RAG_SERVICE_URL <- if (file.exists("/.dockerenv")) {
+  "http://nd_services-rag_service:9126"
+} else {
+  "https://rag_service.dsjlu.wirtschaft.uni-giessen.de"
+}
+
 BASE_URL <- Sys.getenv(
   "RAG_SERVICE_URL",
-  unset = "https://rag_service.dsjlu.wirtschaft.uni-giessen.de"
+  unset = DEFAULT_RAG_SERVICE_URL
 )
 RAG_SERVICE_API_KEY <- Sys.getenv("RAG_SERVICE_API_KEY", unset = "")
 
@@ -92,11 +116,34 @@ ingest_async <- function(
   resp_body_json(resp)$job_id %||% stop("No job_id returned")
 }
 
+fallback_article_html <- function(raw_html) {
+  doc <- xml2::read_html(raw_html)
+  xml2::xml_remove(xml2::xml_find_all(doc, ".//script|.//style|.//noscript|.//nav|.//header|.//footer"))
+  candidates <- xml2::xml_find_all(doc, ".//article|.//main")
+  node <- if (length(candidates) > 0) {
+    candidates[[which.max(nchar(xml2::xml_text(candidates)))]]
+  } else {
+    xml2::xml_find_first(doc, ".//body")
+  }
+  text <- xml2::xml_text(node)
+  text <- paste(strsplit(text, "\\s+")[[1]], collapse = " ")
+  paste0("<html><body><article><p>", htmltools::htmlEscape(text), "</p></article></body></html>")
+}
+
 clean_html <- function(url) {
-  httr2::request(url) |>
+  raw_html <- httr2::request(url) |>
     httr2::req_perform() |>
-    httr2::resp_body_string() |>
-    vns::extract_content_html()
+    httr2::resp_body_string()
+
+  readable_html <- tryCatch(
+    vns::extract_content_html(raw_html),
+    error = function(e) NULL
+  )
+  if (!is.null(readable_html) && nzchar(readable_html)) {
+    return(readable_html)
+  }
+
+  fallback_article_html(raw_html)
 }
 
 ingest_urls_async <- function(url, session_id, label = NULL) {
