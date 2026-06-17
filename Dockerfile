@@ -13,22 +13,13 @@ RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm update
 # readable HOME (avoids /root-owned interpreters that shiny can't execute).
 RUN chown -R shiny:shiny /srv/shiny-server/apps
 
+RUN groupadd -f pyenv && usermod -aG pyenv shiny
+
 USER shiny
 ENV HOME="/home/shiny"
 
 ENV R_LIBS_USER="$HOME/R/library"
 RUN mkdir -p "$R_LIBS_USER"
-
-ENV PYENV_ROOT="$HOME/.pyenv"
-RUN curl -fsSL https://pyenv.run | bash \
-#   && { [ -e '~/.bashrc' ] || touch '~/.bashrc'; } \
-  && echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc \
-  && echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc \
-  && echo 'eval "$(pyenv init - bash)"' >> ~/.bashrc \
-#   && { [ -e '~/.profile' ] || touch '~/.profile'; } \
-  && echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile \
-  && echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile \
-  && echo 'eval "$(pyenv init - bash)"' >> ~/.profile
 
 RUN Rscript --vanilla scripts/setup_envs.R
 
