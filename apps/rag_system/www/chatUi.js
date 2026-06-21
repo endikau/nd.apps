@@ -113,6 +113,8 @@
     el.textContent = "";
     let answerText = "";
     let currentSources = [];
+    let currentTrace = null;
+    let currentPrompts = null;
 
     const url = (cfg.base_url || "").replace(/\/$/, "") + "/chat/stream";
     const headers = {
@@ -125,6 +127,7 @@
       message: cfg.message || "",
       history: cfg.history || []
     };
+    if (cfg.include_trace === true) bodyObj.include_trace = true;
     if (cfg.system_prompt) bodyObj.system_prompt = cfg.system_prompt;
     if (cfg.condense_prompt) bodyObj.condense_prompt = cfg.condense_prompt;
     if (cfg.context_prompt) bodyObj.context_prompt = cfg.context_prompt;
@@ -219,16 +222,25 @@
                   currentSources = chunk.sources || [];
                   chatLog[assistantIdx].sources = currentSources;
                   renderLog();
+                } else if (chunk.type === "trace") {
+                  currentTrace = chunk.trace || currentTrace;
                 } else if (chunk.type === "done") {
                   if (chunk.answer) answerText = chunk.answer;
                   if (chunk.sources) currentSources = chunk.sources;
+                  if (chunk.trace) currentTrace = chunk.trace;
+                  if (chunk.prompts) currentPrompts = chunk.prompts;
                   chatLog[assistantIdx].text = answerText;
                   chatLog[assistantIdx].sources = currentSources;
                   chatLog[assistantIdx].raw = false;
                   renderLog();
                   Shiny.setInputValue(
                     "chat_result",
-                    { answer: chunk.answer || el.textContent, sources: chunk.sources || [] },
+                    {
+                      answer: chunk.answer || el.textContent,
+                      sources: chunk.sources || [],
+                      prompts: currentPrompts,
+                      trace: currentTrace
+                    },
                     { priority: "event" }
                   );
                 } else if (chunk.type === "error") {

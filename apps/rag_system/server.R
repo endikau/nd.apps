@@ -12,6 +12,7 @@ server <- function(input, output, session) {
     ingest_done = FALSE,
     answer = "",
     sources = list(),
+    trace = NULL,
     history = list(),
     last_question = "",
     docs = list()
@@ -152,6 +153,7 @@ server <- function(input, output, session) {
     }
     rv$answer <- ""
     rv$sources <- list()
+    rv$trace <- NULL
     rv$last_question <- question
     current_history <- rv$history
     session$sendCustomMessage("chat-reset", list())
@@ -173,6 +175,7 @@ server <- function(input, output, session) {
     }
     rv$answer <- res$answer %||% ""
     rv$sources <- nd.util::rag_source_list(res$sources)
+    rv$trace <- res$trace
     if (!is.null(rv$sources) && length(rv$sources) > 0) {
       cat("\n--- Verwendete Snippets ---\n")
       for (s in rv$sources) {
@@ -206,6 +209,7 @@ server <- function(input, output, session) {
     isolate({
       rv$answer <- ""
       rv$sources <- list()
+      rv$trace <- NULL
     })
   })
 
