@@ -9,7 +9,12 @@ if [[ ! -f "$NPMRC_PATH" ]]; then
   exit 1
 fi
 
-SECRET_ARG=(--secret "id=npmrc,src=$NPMRC_PATH")
+SECRET_ARGS=(--secret "id=npmrc,src=$NPMRC_PATH")
+if [[ -n "${GITHUB_PAT:-}" ]]; then
+  SECRET_ARGS+=(--secret "id=github_pat,env=GITHUB_PAT")
+fi
+
+RUNTIME_TAG="${RUNTIME_TAG:-4.6.0-py3.12.12-v1}"
 BUILDKIT_PROGRESS="${BUILDKIT_PROGRESS:-plain}"  # plain shows step-by-step logs
 
 # Ensure a buildx builder is available (required for streaming context + secrets).
@@ -26,11 +31,18 @@ build_tracked() {
   echo "Building $tag from tracked files only"
   (
     cd "$ROOT_DIR"
-    git ls-files -z | tar --null -T - -cf - | \
-      DOCKER_BUILDKIT=1 BUILDKIT_PROGRESS="$BUILDKIT_PROGRESS" docker buildx build \
+    git ls-files -z \
+      | while IFS= read -r -d '' path; do
+          if [[ -f "$path" || -L "$path" ]]; then
+            printf '%s\0' "$path"
+          fi
+        done \
+      | tar --null -T - -cf - \
+      | DOCKER_BUILDKIT=1 BUILDKIT_PROGRESS="$BUILDKIT_PROGRESS" docker buildx build \
         --load \
         --progress "$BUILDKIT_PROGRESS" \
-        "${SECRET_ARG[@]}" \
+        --build-arg "RUNTIME_TAG=$RUNTIME_TAG" \
+        "${SECRET_ARGS[@]}" \
         -f "$df_name" \
         -t "$tag" \
         -

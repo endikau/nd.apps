@@ -1,26 +1,59 @@
-# syntax=docker/dockerfile:1.6
-FROM ghcr.io/endikau/nd_docker-shiny_serve:latest
+# syntax=docker/dockerfile:1.7
+
+ARG RUNTIME_TAG=4.6.0-py3.12.12-v1
+ARG NODE_VERSION=24.17.0
+
+FROM ghcr.io/endikau/nd_docker-runtime:${RUNTIME_TAG} AS r-deps
+
+ENV RENV_PATHS_CACHE=/root/.cache/R/renv
+
+WORKDIR /project
+
+COPY renv.lock .Rprofile ./
+COPY renv/activate.R renv/settings.json renv/
+COPY scripts/setup_envs.R scripts/setup_envs.R
+
+RUN --mount=type=cache,target=/root/.cache/R/renv \
+    --mount=type=secret,id=github_pat,required=false \
+    if [ -s /run/secrets/github_pat ]; then \
+      export GITHUB_PAT="$(cat /run/secrets/github_pat)"; \
+    fi; \
+    Rscript scripts/setup_envs.R
+
+
+FROM ghcr.io/endikau/nd_docker-runtime:${RUNTIME_TAG} AS python-deps
+
+COPY requirements.txt /tmp/requirements.txt
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m venv /opt/nd/venv \
+ && /opt/nd/venv/bin/python -m pip install --upgrade pip \
+ && /opt/nd/venv/bin/python -m pip install -r /tmp/requirements.txt
+
+
+FROM node:${NODE_VERSION}-bookworm-slim AS node-deps
+
+WORKDIR /project
+
+COPY package.json package-lock.json ./
+
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=secret,id=npmrc,target=/root/.npmrc \
+    npm ci
+
+
+FROM ghcr.io/endikau/nd_docker-shiny_serve:${RUNTIME_TAG}
+
+ENV RENV_PATHS_CACHE=/tmp/renv-cache \
+    RENV_PYTHON=/opt/nd/venv/bin/python \
+    RETICULATE_PYTHON=/opt/nd/venv/bin/python
 
 WORKDIR /srv/shiny-server/apps
 
-# Copy only tracked repo contents (build context supplied via git ls-files).
-COPY . /srv/shiny-server/apps/
-
-# Use BuildKit secret mount so npm auth is not baked into layers.
-RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm update
-
-# Build Python/R envs as the runtime user so reticulate installs under a
-# readable HOME (avoids /root-owned interpreters that shiny can't execute).
-RUN chown -R shiny:shiny /srv/shiny-server/apps
-
-RUN groupadd -f pyenv && usermod -aG pyenv shiny
-
-USER shiny
-ENV HOME="/home/shiny"
-
-ENV R_LIBS_USER="$HOME/R/library"
-RUN mkdir -p "$R_LIBS_USER"
-
-RUN Rscript --vanilla scripts/setup_envs.R
-
-USER root
+COPY --chown=shiny:shiny . .
+COPY --from=r-deps --chown=shiny:shiny \
+    /project/renv/library/ ./renv/library/
+COPY --from=node-deps --chown=shiny:shiny \
+    /project/node_modules/ ./node_modules/
+COPY --from=python-deps --chown=shiny:shiny \
+    /opt/nd/venv/ /opt/nd/venv/

@@ -1,10 +1,13 @@
-# nd.apps Shiny Serve
+# nd.apps Shiny Server
 
-Lightweight instructions for building and running the Shiny serve image.
+The application image uses the shared `nd_docker-runtime` and
+`nd_docker-shiny_serve` images. R, pyenv/Python, s6, and common system
+libraries come from the shared runtime. npm runs only in a build stage.
 
 ## Prerequisites
 - Docker with BuildKit/buildx enabled (`docker buildx inspect` should succeed).
 - `.npmrc` with registry auth. By default the scripts look for it at repo root; override with `NPMRC_PATH=/path/to/.npmrc`.
+- Set `GITHUB_PAT` when `renv.lock` references private GitHub repositories.
 
 ## Build locally (tracked files only)
 Uses a streamed git context so only tracked files are sent to Docker; `.dockerignore` is ignored in this flow.
@@ -21,8 +24,12 @@ docker run --rm -p 12347:3838 nd_apps-shiny_serve:local
 ```
 
 ## CI build (GitHub Actions)
-`.github/workflows/build.yml` builds from `git ls-files | tar | docker buildx build` and pushes `ghcr.io/<owner>/nd_apps-shiny_serve:latest`. It expects the secret `NPMRC_FILE` containing your `.npmrc` contents.
+`.github/workflows/build.yml` builds from the tracked Git state and pushes both
+`latest` and an immutable `sha-<commit>` tag. It expects `NPMRC_FILE` and can
+optionally use `ND_ACTIONS_READ_TOKEN` for private R dependencies.
 
 ## Notes
 - `.dockerignore` is intentionally `**` (ignore all) to prevent accidental `docker build .`; the supported path is the streamed git context used by the script and CI.
-- The Dockerfile copies the tracked repo into `/srv/shiny-server/apps`, runs `npm update`, then `scripts/setup_envs.R`.
+- R, Python, and npm dependencies are restored in independent stages, so one
+  lockfile changing does not invalidate the other dependency caches.
+- The runtime base is pinned through `RUNTIME_TAG`.
