@@ -35,10 +35,14 @@ server <- function(input, output, session) {
     if (tab == "PDF") {
       req(input$pdfs)
       pdf_paths <- input$pdfs$datapath
-      label <- input$doc_label %||% NULL
+      document_name <- trimws(input$doc_name %||% "")
+      document_name <- if (nzchar(document_name)) document_name else input$pdfs$name
       tryCatch(
         {
-          job_id <- rag$ingest_pdf_async(pdf_paths, .label = label, .filenames = input$pdfs$name)
+          job_id <- rag$ingest_pdf_async(
+            pdf_paths,
+            .name = document_name
+          )
           rv$ingest_job <- job_id
           rv$ingest_done <- FALSE
           rv$ingest_status <- list(status = "running", progress = 0, message = "Starte PDF-Ingest")
@@ -56,10 +60,14 @@ server <- function(input, output, session) {
         showNotification("Enter a URL.", type = "warning")
         return()
       }
-      label <- input$doc_label %||% NULL
+      document_name <- trimws(input$doc_name %||% "")
+      document_name <- if (nzchar(document_name)) document_name else NULL
       tryCatch(
         {
-          job_id <- rag$ingest_url_async(url, .label = label)
+          job_id <- rag$ingest_url_async(
+            url,
+            .name = document_name
+          )
           rv$ingest_job <- job_id
           rv$ingest_done <- FALSE
           rv$ingest_status <- list(status = "running", progress = 0, message = "Starte URL-Ingest")

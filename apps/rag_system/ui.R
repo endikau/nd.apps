@@ -42,8 +42,8 @@ ui <- nd.util::nd_page(
             )
           ),
           textInput(
-            "doc_label",
-            "Beschriftung für das Dokument (optional)",
+            "doc_name",
+            "Dokumentname (optional)",
             ""
           ),
           actionButton("ingest_btn", "Ingest starten", class = "btn-primary"),
@@ -122,7 +122,7 @@ ui <- nd.util::nd_page(
 #             )
 #           )
 #         ),
-#         textInput("doc_label", "Beschriftung für das Dokument (optional)", ""),
+#         textInput("doc_name", "Dokumentname (optional)", ""),
 #         actionButton("ingest_btn", "Ingest starten", class = "btn-primary"),
 #         tags$hr(),
 #         uiOutput("ingest_status"),
