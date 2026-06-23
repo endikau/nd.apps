@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  RUNTIME_TAG: 4.6.0-py3.12.12-v2
+  RUNTIME_TAG: 4.6.0-py3.12.12-v3
 
 jobs:
   build-and-push:

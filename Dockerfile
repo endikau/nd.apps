@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-ARG RUNTIME_TAG=4.6.0-py3.12.12-v2
+ARG RUNTIME_TAG=4.6.0-py3.12.12-v3
 
 FROM ghcr.io/endikau/nd_docker-runtime:${RUNTIME_TAG} AS r-deps
 
