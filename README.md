@@ -1,8 +1,8 @@
 # nd.apps Shiny Server
 
 The application image uses the shared `nd_docker-runtime` and
-`nd_docker-shiny_serve` images. R, pyenv/Python, s6, and common system
-libraries come from the shared runtime. npm runs only in a build stage.
+`nd_docker-shiny_serve` images. R, pyenv/Python, Node/npm, `libnode-dev`, s6,
+and common system libraries come from the shared runtime.
 
 ## Prerequisites
 - Docker with BuildKit/buildx enabled (`docker buildx inspect` should succeed).
@@ -32,4 +32,7 @@ optionally use `ND_ACTIONS_READ_TOKEN` for private R dependencies.
 - `.dockerignore` is intentionally `**` (ignore all) to prevent accidental `docker build .`; the supported path is the streamed git context used by the script and CI.
 - R, Python, and npm dependencies are restored in independent stages, so one
   lockfile changing does not invalidate the other dependency caches.
+- `@endikau/nd_assets` is installed from the private npm registry with
+  `npm ci`.
+- The R package `nd.util` is restored from GitHub through `renv.lock`.
 - The runtime base is pinned through `RUNTIME_TAG`.

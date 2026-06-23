@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-ARG RUNTIME_TAG=4.6.0-py3.12.12-v1
-ARG NODE_VERSION=24.17.0
+ARG RUNTIME_TAG=4.6.0-py3.12.12-v2
 
 FROM ghcr.io/endikau/nd_docker-runtime:${RUNTIME_TAG} AS r-deps
 
@@ -31,7 +30,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
  && /opt/nd/venv/bin/python -m pip install -r /tmp/requirements.txt
 
 
-FROM node:${NODE_VERSION}-bookworm-slim AS node-deps
+FROM ghcr.io/endikau/nd_docker-runtime:${RUNTIME_TAG} AS node-deps
 
 WORKDIR /project
 
