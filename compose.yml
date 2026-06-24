@@ -1,6 +1,6 @@
 services:
   nd_apps-shiny_serve:
-    image: ghcr.io/endikau/nd_apps-shiny_serve:${ND_APPS_TAG:-latest}
+    image: ${ND_APPS_IMAGE:-nd_apps-shiny_serve:local}
     restart: unless-stopped
     ports:
       - "12347:3838"

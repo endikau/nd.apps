@@ -23,6 +23,18 @@ Result: `nd_apps-shiny_serve:local`.
 docker run --rm -p 12347:3838 nd_apps-shiny_serve:local
 ```
 
+or:
+
+```bash
+docker compose up
+```
+
+`compose.yml` defaults to the local image. To run a published image instead:
+
+```bash
+ND_APPS_IMAGE=ghcr.io/endikau/nd_apps-shiny_serve:latest docker compose up
+```
+
 ## CI build (GitHub Actions)
 `.github/workflows/build.yml` builds from the tracked Git state and pushes both
 `latest` and an immutable `sha-<commit>` tag. It expects `NPMRC_FILE` and can

@@ -44,6 +44,8 @@ RUN --mount=type=cache,target=/root/.npm \
 FROM ghcr.io/endikau/nd_docker-shiny_serve:${RUNTIME_TAG}
 
 ENV RENV_PATHS_CACHE=/tmp/renv-cache \
+    RENV_PROJECT=/srv/shiny-server/apps \
+    R_PROFILE_USER=/srv/shiny-server/apps/.Rprofile \
     RENV_PYTHON=/opt/nd/venv/bin/python \
     RETICULATE_PYTHON=/opt/nd/venv/bin/python
 
