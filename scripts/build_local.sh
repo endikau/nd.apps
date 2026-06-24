@@ -14,7 +14,7 @@ if [[ -n "${GITHUB_PAT:-}" ]]; then
   SECRET_ARGS+=(--secret "id=github_pat,env=GITHUB_PAT")
 fi
 
-RUNTIME_TAG="${RUNTIME_TAG:-4.6.0-py3.12.12-v3}"
+RUNTIME_TAG="${RUNTIME_TAG:-4.6.0-py3.12.12-v4}"
 BUILDKIT_PROGRESS="${BUILDKIT_PROGRESS:-plain}"  # plain shows step-by-step logs
 
 # Ensure a buildx builder is available (required for streaming context + secrets).
