@@ -18,6 +18,16 @@ Uses a streamed git context so only tracked files are sent to Docker; `.dockerig
 
 Result: `nd_apps-shiny_serve:local`.
 
+## Set up local R/Python environments
+For non-Docker development, run:
+
+```bash
+Rscript scripts/setup_envs.R
+```
+
+This restores R packages with renv, creates the Python virtualenv recorded in
+`renv.lock`, and installs `requirements.txt`.
+
 ## Run locally
 ```bash
 docker run --rm -p 12347:3838 nd_apps-shiny_serve:local
@@ -47,4 +57,7 @@ optionally use `ND_ACTIONS_READ_TOKEN` for private R dependencies.
 - `@endikau/nd_assets` is installed from the private npm registry with
   `npm ci`.
 - The R package `nd.util` is restored from GitHub through `renv.lock`.
+- Runtime R package lookup uses the renv-restored library through
+  `R_LIBS_SITE=/opt/nd/R/library`; Shiny apps do not depend on runtime
+  `.Rprofile` activation.
 - The runtime base is pinned through `RUNTIME_TAG`.

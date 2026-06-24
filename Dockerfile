@@ -17,17 +17,20 @@ RUN --mount=type=cache,target=/root/.cache/R/renv \
     if [ -s /run/secrets/github_pat ]; then \
       export GITHUB_PAT="$(cat /run/secrets/github_pat)"; \
     fi; \
-    Rscript scripts/setup_envs.R
+    ND_SETUP_ENVS=R Rscript scripts/setup_envs.R
 
 
 FROM ghcr.io/endikau/nd_docker-runtime:${RUNTIME_TAG} AS python-deps
 
-COPY requirements.txt /tmp/requirements.txt
+WORKDIR /project
+
+COPY renv.lock requirements.txt ./
+COPY scripts/setup_envs.R scripts/setup_envs.R
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    python -m venv /opt/nd/venv \
- && /opt/nd/venv/bin/python -m pip install --upgrade pip \
- && /opt/nd/venv/bin/python -m pip install -r /tmp/requirements.txt
+    ND_SETUP_ENVS=PYTHON \
+    ND_PYTHON_VENV=/opt/nd/venv \
+    Rscript scripts/setup_envs.R
 
 
 FROM ghcr.io/endikau/nd_docker-runtime:${RUNTIME_TAG} AS node-deps
@@ -44,8 +47,7 @@ RUN --mount=type=cache,target=/root/.npm \
 FROM ghcr.io/endikau/nd_docker-shiny_serve:${RUNTIME_TAG}
 
 ENV RENV_PATHS_CACHE=/tmp/renv-cache \
-    RENV_PROJECT=/srv/shiny-server/apps \
-    R_PROFILE_USER=/srv/shiny-server/apps/.Rprofile \
+    R_LIBS_SITE=/opt/nd/R/library:/usr/local/lib/R/site-library \
     RENV_PYTHON=/opt/nd/venv/bin/python \
     RETICULATE_PYTHON=/opt/nd/venv/bin/python
 
@@ -54,6 +56,12 @@ WORKDIR /srv/shiny-server/apps
 COPY --chown=shiny:shiny . .
 COPY --from=r-deps --chown=shiny:shiny \
     /project/renv/library/ ./renv/library/
+RUN set -eu; \
+    r_library="$(find /srv/shiny-server/apps/renv/library -mindepth 3 -maxdepth 3 -type d -print -quit)"; \
+    test -n "${r_library}"; \
+    test -d "${r_library}"; \
+    mkdir -p /opt/nd/R; \
+    ln -s "${r_library}" /opt/nd/R/library
 COPY --from=node-deps --chown=shiny:shiny \
     /project/node_modules/ ./node_modules/
 COPY --from=python-deps --chown=shiny:shiny \
