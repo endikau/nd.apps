@@ -6,16 +6,28 @@ server <- function(input, output, session) {
     .session_id = session_id
   )
 
+  # Zentrale Meldungsausgabe: zeigt die Nachricht als Shiny-Notification an UND
+  # schreibt sie zusätzlich auf die Konsole (Server-Log) zur Diagnose.
+  notify <- function(msg, type = c("error", "warning", "message")) {
+    type <- match.arg(type)
+    prefix <- switch(type, error = "[ERROR]", warning = "[WARN]", message = "[INFO]")
+    message(sprintf("%s [%s] %s", prefix, session_id, msg))
+    showNotification(msg, type = type)
+  }
+
   rv <- reactiveValues(
     ingest_job = NULL,
     ingest_status = NULL,
     ingest_done = FALSE,
-    answer = "",
-    sources = list(),
-    trace = NULL,
     history = list(),
     last_question = "",
-    docs = list()
+    docs = list(),
+    # Chat-Verlauf: abgeschlossene Runden + aktuell streamende Runde.
+    dialogue = list(),
+    cur_question = "",
+    cur_answer = "",
+    cur_sources = list(),
+    streaming = FALSE
   )
 
   # initial document load
@@ -31,11 +43,16 @@ server <- function(input, output, session) {
   }, once = TRUE)
 
   observeEvent(input$ingest_btn, {
-    tab <- input$ingest_tab %||% "HTML-URL"
-    if (tab == "PDF") {
-      req(input$pdfs)
+    mode <- if (identical(input$ingest_mode, "PDF")) "pdf" else "url"
+    document_name <- trimws(input$doc_name %||% "")
+
+    if (mode == "pdf") {
+      has_pdf <- !is.null(input$pdfs) && length(input$pdfs$datapath) > 0
+      if (!has_pdf) {
+        notify("Bitte eine PDF auswählen.", type = "warning")
+        return()
+      }
       pdf_paths <- input$pdfs$datapath
-      document_name <- trimws(input$doc_name %||% "")
       document_name <- if (nzchar(document_name)) document_name else input$pdfs$name
       tryCatch(
         {
@@ -48,19 +65,15 @@ server <- function(input, output, session) {
           rv$ingest_status <- list(status = "running", progress = 0, message = "Starte PDF-Ingest")
         },
         error = function(e) {
-          showNotification(
-            paste("Ingest start failed:", e$message),
-            type = "error"
-          )
+          notify(paste("Ingest-Start fehlgeschlagen:", e$message), type = "error")
         }
       )
     } else {
       url <- trimws(input$urls %||% "")
       if (!nzchar(url)) {
-        showNotification("Enter a URL.", type = "warning")
+        notify("Bitte eine URL eingeben.", type = "warning")
         return()
       }
-      document_name <- trimws(input$doc_name %||% "")
       document_name <- if (nzchar(document_name)) document_name else NULL
       tryCatch(
         {
@@ -73,10 +86,7 @@ server <- function(input, output, session) {
           rv$ingest_status <- list(status = "running", progress = 0, message = "Starte URL-Ingest")
         },
         error = function(e) {
-          showNotification(
-            paste("Ingest URLs failed:", e$message),
-            type = "error"
-          )
+          notify(paste("URL-Ingest fehlgeschlagen:", e$message), type = "error")
         }
       )
     }
@@ -94,18 +104,18 @@ server <- function(input, output, session) {
         if (status$status %in% c("succeeded", "failed")) {
           rv$ingest_done <- TRUE
           if (status$status == "failed") {
-            showNotification(
-              paste("Ingest failed:", status$error %||% status$message),
+            notify(
+              paste("Ingest fehlgeschlagen:", status$error %||% status$message),
               type = "error"
             )
           } else {
-            showNotification("Ingest completed", type = "message")
+            notify("Ingest abgeschlossen", type = "message")
             tryCatch(
               {
                 rv$docs <- rag$list_documents()
               },
               error = function(e) {
-                showNotification(paste("Dokumente laden fehlgeschlagen:", e$message), type = "warning")
+                notify(paste("Dokumente laden fehlgeschlagen:", e$message), type = "warning")
               }
             )
           }
@@ -113,8 +123,8 @@ server <- function(input, output, session) {
       },
       error = function(e) {
         rv$ingest_done <- TRUE
-        showNotification(
-          paste("Ingest status failed:", e$message),
+        notify(
+          paste("Ingest-Status fehlgeschlagen:", e$message),
           type = "error"
         )
       }
@@ -154,19 +164,19 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$send_btn, {
-    question <- input$question
+    question <- trimws(input$question %||% "")
     if (!nzchar(question)) {
-      showNotification("Enter a question.", type = "warning")
+      notify("Bitte eine Frage eingeben.", type = "warning")
       return()
     }
-    rv$answer <- ""
-    rv$sources <- list()
-    rv$trace <- NULL
+    rv$cur_question <- question
+    rv$cur_answer <- ""
+    rv$cur_sources <- list()
+    rv$streaming <- TRUE
     rv$last_question <- question
     current_history <- rv$history
-    session$sendCustomMessage("chat-reset", list())
 
-    # Trigger client-side streaming fetch
+    # Streaming clientseitig anstoßen; Tokens kommen über chat_progress zurück.
     session$sendCustomMessage(
       "chat-start",
       rag$chat_stream_config(
@@ -174,6 +184,14 @@ server <- function(input, output, session) {
         .history = current_history
       )
     )
+    updateTextInput(session, "question", value = "")
+  })
+
+  # Zwischenstand: vollständige Absätze, die der Client weiterreicht.
+  observeEvent(input$chat_progress, {
+    prog <- input$chat_progress
+    rv$cur_answer <- prog$answer %||% ""
+    rv$cur_sources <- nd.util::rag_source_list(prog$sources)
   })
 
   observeEvent(input$chat_result, {
@@ -181,44 +199,81 @@ server <- function(input, output, session) {
     if (is.null(res)) {
       return()
     }
-    rv$answer <- res$answer %||% ""
-    rv$sources <- nd.util::rag_source_list(res$sources)
-    rv$trace <- res$trace
-    if (!is.null(rv$sources) && length(rv$sources) > 0) {
-      cat("\n--- Verwendete Snippets ---\n")
-      for (s in rv$sources) {
-        if (!is.null(s$context_text)) {
-          cat(sprintf("[%s] %s\n", s$i %||% "?", s$context_text))
-        }
-      }
-      cat("--------------------------\n")
-    }
+    answer <- res$answer %||% rv$cur_answer %||% ""
+    sources <- nd.util::rag_source_list(res$sources)
+
+    # Abgeschlossene Runde in den sichtbaren Verlauf übernehmen.
+    rv$dialogue <- append(
+      rv$dialogue,
+      list(list(
+        question = rv$cur_question,
+        answer = answer,
+        sources = sources
+      ))
+    )
     rv$history <- append(
       rv$history,
       list(
         list(role = "user", content = rv$last_question),
-        list(role = "assistant", content = rv$answer)
+        list(role = "assistant", content = answer)
       )
     )
-    if (!is.null(res$prompts)) {
-      cat("\n--- Verwendete Prompts ---\n")
-      for (nm in names(res$prompts)) {
-        cat(nm, ":\n", res$prompts[[nm]] %||% "NULL", "\n\n")
-      }
-      cat("-------------------------\n")
+
+    # Sichtbaren Verlauf und gesendete Historie begrenzen.
+    max_dialogue <- 10
+    if (length(rv$dialogue) > max_dialogue) {
+      rv$dialogue <- rv$dialogue[(length(rv$dialogue) - max_dialogue + 1):length(rv$dialogue)]
     }
+    max_turns <- 20
+    if (length(rv$history) > max_turns) {
+      rv$history <- rv$history[(length(rv$history) - max_turns + 1):length(rv$history)]
+    }
+
+    rv$streaming <- FALSE
+    rv$cur_question <- ""
+    rv$cur_answer <- ""
+    rv$cur_sources <- list()
   })
 
   observeEvent(input$chat_error, {
     err <- input$chat_error
     if (!is.null(err$error)) {
-      showNotification(paste("Chat failed:", err$error), type = "error")
+      notify(paste("Chat fehlgeschlagen:", err$error), type = "error")
     }
-    isolate({
-      rv$answer <- ""
-      rv$sources <- list()
-      rv$trace <- NULL
+    rv$streaming <- FALSE
+    rv$cur_question <- ""
+    rv$cur_answer <- ""
+    rv$cur_sources <- list()
+  })
+
+  # Gesamten Dialog serverseitig rendern (Fallstudien-Stil).
+  output$chat_dialogue <- renderUI({
+    turns <- lapply(rv$dialogue, function(turn) {
+      tagList(
+        rag_make_question_box(turn$question),
+        rag_make_answer_box(turn$answer, turn$sources)
+      )
     })
+
+    if (isTRUE(rv$streaming)) {
+      streaming_turn <- tagList(
+        rag_make_question_box(rv$cur_question),
+        if (nzchar(rv$cur_answer %||% "")) {
+          rag_make_answer_box(rv$cur_answer, rv$cur_sources)
+        } else {
+          rag_make_answer_box(NULL, list(), .loading = TRUE)
+        }
+      )
+      turns <- c(turns, list(streaming_turn))
+    }
+
+    if (length(turns) == 0) {
+      return(div(
+        class = "text-muted",
+        "Noch keine Nachrichten. Stellen Sie eine Frage."
+      ))
+    }
+    tagList(turns)
   })
 
   observeEvent(input$refresh_docs, {
@@ -227,35 +282,9 @@ server <- function(input, output, session) {
         rv$docs <- rag$list_documents()
       },
       error = function(e) {
-        showNotification(paste("Dokumente laden fehlgeschlagen:", e$message), type = "error")
+        notify(paste("Dokumente laden fehlgeschlagen:", e$message), type = "error")
       }
     )
-  })
-
-  output$sources <- renderUI({
-    if (is.null(rv$sources) || length(rv$sources) == 0) {
-      return(div("No sources returned."))
-    }
-    tagList(lapply(rv$sources, function(s) {
-      pages <- if (!is.null(s$page_numbers)) {
-        paste("p.", paste(s$page_numbers, collapse = ", "))
-      } else {
-        "p. ?"
-      }
-      heading <- if (!is.null(s$headings) && length(s$headings) > 0) {
-        paste(" — ", tail(s$headings, 1))
-      } else {
-        ""
-      }
-      div(
-        paste0("[", s$i %||% NA_integer_, "] "),
-        s$source_file %||% "unknown",
-        " (",
-        pages,
-        ")",
-        heading
-      )
-    }))
   })
 
   output$doc_list <- renderUI({
@@ -291,10 +320,10 @@ server <- function(input, output, session) {
       {
         rag$delete_documents(lbl)
         rv$docs <- rag$list_documents()
-        showNotification(paste("Gelöscht:", lbl), type = "message")
+        notify(paste("Gelöscht:", lbl), type = "message")
       },
       error = function(e) {
-        showNotification(paste("Löschen fehlgeschlagen:", e$message), type = "error")
+        notify(paste("Löschen fehlgeschlagen:", e$message), type = "error")
       }
     )
   })

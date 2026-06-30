@@ -94,30 +94,26 @@ for (i in seq_len(nrow(data))) {
 }
 
 # UI
-ui <- nd.util::nd_page(
-  .page_type = "app",
-  .navbar = NULL,
-  .main = list(
-    tags$style(HTML(
-      "
+ui <- nd.util::nd_app(
+  .head = tags$style(HTML(
+    "
       .ner-card { border: 1px solid #eee; border-radius: 12px; padding: 16px; }
       .ner-title { margin: 0 0 4px 0; font-size: 1.2rem; line-height: 1.25; }
       .ner-meta { font-size: 0.9rem; color: #666; margin-bottom: 12px; }
       .ner-legend span { padding: 3px 8px; margin: 3px; border-radius: 4px; display: inline-block; }
     "
-    )),
-    tags$div(
-      class = "d-grid mb-4",
-      nd.util::nd_button_block(
-        .id = "generate",
-        .label = "Zufälliger Google News Artikel",
-        .fa_class = "fa-solid fa-dice",
-        .fa_class_busy = "fa-solid fa-dice fa-spin"
-      )
-    ),
-    uiOutput("article_output"),
-    htmltools::suppressDependencies("font-awesome")
-  )
+  )),
+  tags$div(
+    class = "d-grid mb-4",
+    nd.util::nd_button_block(
+      .id = "generate",
+      .label = "Zufälliger Google News Artikel",
+      .fa_class = "fa-solid fa-dice",
+      .fa_class_busy = "fa-solid fa-dice fa-spin"
+    )
+  ),
+  uiOutput("article_output"),
+  htmltools::suppressDependencies("font-awesome")
 )
 
 # Server

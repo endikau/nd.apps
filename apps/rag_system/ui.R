@@ -1,44 +1,48 @@
 tags <- htmltools::tags
 
-ui <- nd.util::nd_page(
-  .page_type = "app",
-  .navbar = NULL,
-  .main = list(
-    tags$head(
-      shiny::includeScript("www/chatUi.js"),
-      # markdown renderer for chat content
-      tags$script(src = "https://cdn.jsdelivr.net/npm/marked/marked.min.js"),
-      tags$link(
-        rel = "stylesheet",
-        href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      ),
-      shiny::includeCSS("www/style.css")
-    ),
-    fluidRow(
-      column(
-        width = 4,
-        wellPanel(
-          h4("Ingest"),
-          bslib::navset_card_tab(
-            id = "ingest_tab",
-            selected = "HTML-URL",
-            bslib::nav_panel(
-              "HTML-URL",
-              textInput(
-                "urls",
-                "Eine HTML-URL einfügen",
-                value = "",
-                placeholder = "https://example.com/page"
-              )
-            ),
-            bslib::nav_panel(
-              "PDF",
-              fileInput(
-                "pdfs",
-                "PDF auswählen",
-                multiple = FALSE,
-                accept = ".pdf"
-              )
+ui <- nd.util::nd_app(
+  .title = "RAG-System",
+  .head = tagList(
+    shiny::includeCSS("www/style.css"),
+    tags$style(htmltools::HTML(CHAT_CSS)),
+    # Re-init-fähige Popover-Engine (für dynamisch gerenderte Chat-Inhalte)
+    # und Chat-Streaming.
+    shiny::includeScript("www/popover.js"),
+    shiny::includeScript("www/chatUi.js")
+  ),
+  tags$div(
+    class = "d-flex flex-column gap-4",
+    bslib::card(
+        fill = FALSE,
+        bslib::card_header("Ingest"),
+        bslib::card_body(
+          fillable = FALSE,
+          div(
+            class = "ingest-tabs",
+            radioButtons(
+              "ingest_mode",
+              label = NULL,
+              choices = c("HTML-URL", "PDF"),
+              selected = "HTML-URL",
+              inline = TRUE
+            )
+          ),
+          conditionalPanel(
+            condition = "input.ingest_mode == 'HTML-URL'",
+            textInput(
+              "urls",
+              "Eine HTML-URL einfügen",
+              value = "",
+              placeholder = "https://example.com/page"
+            )
+          ),
+          conditionalPanel(
+            condition = "input.ingest_mode == 'PDF'",
+            fileInput(
+              "pdfs",
+              "PDF auswählen",
+              multiple = FALSE,
+              accept = ".pdf"
             )
           ),
           textInput(
@@ -52,10 +56,11 @@ ui <- nd.util::nd_page(
           uiOutput("ingest_progress")
         )
       ),
-      column(
-        width = 4,
-        wellPanel(
-          h4("Dokumente"),
+      bslib::card(
+        fill = FALSE,
+        bslib::card_header("Dokumente"),
+        bslib::card_body(
+          fillable = FALSE,
           actionButton(
             "refresh_docs",
             "Aktualisieren",
@@ -65,15 +70,14 @@ ui <- nd.util::nd_page(
           uiOutput("doc_list")
         )
       ),
-      column(
-        width = 4,
-        wellPanel(
-          h4("Chat"),
-          strong("Antwort:"),
+      bslib::card(
+        fill = FALSE,
+        bslib::card_header("Chat"),
+        bslib::card_body(
+          fillable = FALSE,
           div(
-            id = "chat_stream",
-            class = "chat-stream",
-            style = "min-height: 360px;"
+            class = "rag-chat",
+            uiOutput("chat_dialogue")
           ),
           tags$hr(),
           textInput("question", "Frage", ""),
@@ -82,80 +86,3 @@ ui <- nd.util::nd_page(
       )
     )
   )
-)
-
-# ui <- bslib::page_fluid(
-#   tags$head(
-#     shiny::includeScript("www/chatUi.js"),
-#     # markdown renderer for chat content
-#     tags$script(src = "https://cdn.jsdelivr.net/npm/marked/marked.min.js"),
-#     tags$link(
-#       rel = "stylesheet",
-#       href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-#     ),
-#     shiny::includeCSS("www/style.css")
-#   ),
-#   fluidRow(
-#     column(
-#       width = 4,
-#       wellPanel(
-#         h4("Ingest"),
-#         bslib::navset_card_tab(
-#           id = "ingest_tab",
-#           selected = "HTML-URL",
-#           bslib::nav_panel(
-#             "HTML-URL",
-#             textInput(
-#               "urls",
-#               "Eine HTML-URL einfügen",
-#               value = "",
-#               placeholder = "https://example.com/page"
-#             )
-#           ),
-#           bslib::nav_panel(
-#             "PDF",
-#             fileInput(
-#               "pdfs",
-#               "PDF auswählen",
-#               multiple = FALSE,
-#               accept = ".pdf"
-#             )
-#           )
-#         ),
-#         textInput("doc_name", "Dokumentname (optional)", ""),
-#         actionButton("ingest_btn", "Ingest starten", class = "btn-primary"),
-#         tags$hr(),
-#         uiOutput("ingest_status"),
-#         uiOutput("ingest_progress")
-#       )
-#     ),
-#     column(
-#       width = 4,
-#       wellPanel(
-#         h4("Dokumente"),
-#         actionButton(
-#           "refresh_docs",
-#           "Aktualisieren",
-#           class = "btn-secondary btn-sm"
-#         ),
-#         tags$hr(),
-#         uiOutput("doc_list")
-#       )
-#     ),
-#     column(
-#       width = 4,
-#       wellPanel(
-#         h4("Chat"),
-#         strong("Antwort:"),
-#         div(
-#           id = "chat_stream",
-#           class = "chat-stream",
-#           style = "min-height: 360px;"
-#         ),
-#         tags$hr(),
-#         textInput("question", "Frage", ""),
-#         actionButton("send_btn", "Senden", class = "btn-success")
-#       )
-#     )
-#   )
-# )

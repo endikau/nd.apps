@@ -1,0 +1,125 @@
+// Chat-Styles, übernommen aus nd.site/content/case_studies/rag_system/style.scss.
+// Statt unter .nd-article (Site-Kontext) hier unter .rag-chat gescoped, da die
+// App keinen Artikel-Wrapper hat. Wird in global.R einmal via sass kompiliert.
+
+.rag-chat {
+
+  // Dialogverlauf wächst mit dem Inhalt; gescrollt wird die Seite. So wird
+  // keine Frage-/Antwort-Karte durch einen festen Scrollkasten abgeschnitten.
+  // (Die umgebende bslib-Card liefert Rahmen und Padding.)
+
+  // Frage-/Antwort-Karten: Absatzabstände innerhalb der Bubble normalisieren.
+  .card-body.rag-dialogue-card-body > p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    text-indent: 0;
+
+    &:last-of-type {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  // Avatar-Spalte: Icon skaliert mit der Spaltenbreite, gedeckelt bei 2.5rem.
+  .rag-dialogue-avatar {
+    container-type: inline-size;
+    overflow: hidden;
+
+    > i,
+    > svg {
+      // Interpolation, damit LibSass min() nicht als Sass-Funktion auswertet
+      // (sonst Fehler bei gemischten Einheiten cqw/rem).
+      font-size: #{"min(2.5rem, 60cqw)"};
+      line-height: 1;
+    }
+  }
+
+  // Chat-Zeile als eigenes CSS-Grid (freie Spaltenbreiten statt 12er-Raster).
+  .rag-dialogue-row {
+    display: grid;
+    gap: 0;
+    align-items: stretch;
+    margin-bottom: 1rem;
+
+    &--q {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 10fr);
+    }
+
+    &--a {
+      grid-template-columns: minmax(0, 10fr) minmax(0, 2fr);
+    }
+  }
+
+  // Ab md: Avatar 1.5/12, Text 9/12, Rest Leerraum auf der Ausrichtungsseite.
+  @media (min-width: 768px) {
+    .rag-dialogue-row--q {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 9fr) minmax(0, 1.5fr);
+    }
+
+    .rag-dialogue-row--a {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 9fr) minmax(0, 1.5fr);
+
+      > .rag-dialogue-bubble {
+        grid-column: 2;
+      }
+
+      > .rag-dialogue-avatar {
+        grid-column: 3;
+      }
+    }
+  }
+
+  // Breite Tabellen in Antworten horizontal scrollbar machen.
+  .rag-dialogue-table-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    margin-bottom: 1rem;
+    padding-bottom: 0.25rem;
+    scrollbar-color: var(--bs-primary) var(--bs-border-color);
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      height: 0.75rem;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: var(--bs-border-color);
+      border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--bs-primary);
+      border: 3px solid var(--bs-border-color);
+      border-radius: 999px;
+    }
+
+    table {
+      width: max-content;
+      min-width: 42rem;
+      max-width: none;
+      margin-bottom: 0;
+      border-collapse: collapse;
+      table-layout: auto;
+    }
+
+    th,
+    td {
+      padding: 0.35rem 0.5rem;
+      border: 1px solid var(--bs-border-color);
+      vertical-align: top;
+    }
+
+    th:first-child,
+    td:first-child {
+      min-width: 8rem;
+    }
+
+    th:not(:first-child),
+    td:not(:first-child) {
+      min-width: 14rem;
+    }
+  }
+}

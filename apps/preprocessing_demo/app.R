@@ -158,13 +158,9 @@ preprocess_text <- function(text, steps) {
 
 
 # ui
-ui <- nd.util::nd_page(
-  .page_type = "app",
-  .navbar = NULL,
-  .main = list(
-    tags$head(
-      tags$style(HTML(
-        "
+ui <- nd.util::nd_app(
+  .head = tags$style(HTML(
+    "
         .text-display, .text-display pre {
           white-space: pre-wrap !important;
           word-break: break-word !important;
@@ -186,11 +182,9 @@ ui <- nd.util::nd_page(
           margin-bottom: .4rem;
         }
       "
-      ))
-    ),
-
-    tags$div(
-      class = "container py-3",
+  )),
+  tags$div(
+    class = "container py-3",
       tags$div(
         class = "row g-4",
 
@@ -258,7 +252,6 @@ ui <- nd.util::nd_page(
       )
     )
   )
-)
 
 
 # Server

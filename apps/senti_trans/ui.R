@@ -89,12 +89,9 @@ element_output_result <- tags$div(
   )
 )
 
-shiny_ui <- nd.util::nd_page(
-  .page_type="app",
-  .navbar=NULL,
-  .main=list(
-    tags$div(
-      tags$script(
+shiny_ui <- nd.util::nd_app(
+  tags$div(
+    tags$script(
         "$(document).on('shiny:inputchanged', function(event) {
           if (event.name === 'input_doc_analyze') {
             Shiny.setInputValue(result_invalid, 1);;
@@ -117,7 +114,6 @@ shiny_ui <- nd.util::nd_page(
       element_output_result
     ),
     htmltools::suppressDependencies("font-awesome")
-  )
 )
 
 shiny_ui |> htmltools::findDependencies()

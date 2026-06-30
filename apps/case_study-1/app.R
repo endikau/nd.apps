@@ -67,22 +67,18 @@ preprocess_data <- function(data) {
 data <- preprocess_data(data)
 
 # Shiny UI
-ui <- nd.util::nd_page(
-  .page_type = "app",
-  .navbar = NULL,
-  .main = list(
-    tags$div(
-      class = "d-grid mb-4",
-      nd.util::nd_button_block(
-        .id = "generate",
-        .label = "Erhalte einen zufälligen Google News Artikel",
-        .fa_class = "fa-solid fa-dice",
-        .fa_class_busy = "fa-solid fa-dice fa-spin"
-      ),
+ui <- nd.util::nd_app(
+  tags$div(
+    class = "d-grid mb-4",
+    nd.util::nd_button_block(
+      .id = "generate",
+      .label = "Erhalte einen zufälligen Google News Artikel",
+      .fa_class = "fa-solid fa-dice",
+      .fa_class_busy = "fa-solid fa-dice fa-spin"
     ),
-    uiOutput("article_output"),
-    htmltools::suppressDependencies("font-awesome")
-  )
+  ),
+  uiOutput("article_output"),
+  htmltools::suppressDependencies("font-awesome")
 )
 
 # Shiny Server

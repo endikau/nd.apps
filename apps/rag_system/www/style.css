@@ -1,81 +1,69 @@
-.chat-stream {
-  background: #0f172a;
-  color: #e2e8f0;
-  padding: 12px;
-  border-radius: 6px;
-  min-height: 360px;
-  max-height: 360px;
-  overflow-y: auto;
-  font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.sources-list {
-  margin-top: 8px;
-}
-
-.chat-row {
-  display: flex;
-  width: 100%;
-}
-
-.chat-row.user {
-  justify-content: flex-end;
-}
-
-.chat-row.assistant {
-  justify-content: flex-start;
-}
-
-.chat-bubble {
-  max-width: 85%;
-  padding: 10px 12px;
-  border-radius: 10px;
-  line-height: 1.4;
-  word-break: break-word;
-  background: #1f2937;
-  border: 1px solid #1e293b;
-}
-
-.chat-bubble.user {
-  background: #2563eb;
-  color: #e2e8f0;
-  border-color: #1d4ed8;
-}
-
-.chat-bubble.assistant {
-  background: #111827;
-  color: #e5e7eb;
-  border-color: #1f2937;
-}
-
-.chat-role {
-  font-size: 12px;
-  opacity: 0.8;
-  margin-bottom: 4px;
-}
-
-.chat-text {
-  font-size: 14px;
-}
-
-.source-ref {
-  cursor: pointer;
-  text-decoration: underline dotted;
-}
-
-.tooltip-inner {
-  max-width: 480px;
-  text-align: left;
-  white-space: normal;
-}
-
-.tooltip.show {
-  opacity: 1;
-}
-
+/* Lade-Indikator in der noch leeren Antwort-Karte. */
 .loading-brain {
   display: inline-block;
+}
+
+/* radioButtons("ingest_mode") als Bootstrap-5.3-nav-tabs darstellen.
+   Shiny rendert die Inline-Radios als <label.radio-inline><input><span>. */
+.ingest-tabs .control-label {
+  display: none;
+}
+
+.ingest-tabs .shiny-options-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: var(--bs-border-width, 1px) solid var(--bs-border-color, #dee2e6);
+}
+
+/* jedes Radio-Label wird zum nav-tab */
+.ingest-tabs .radio-inline {
+  position: relative;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  margin-bottom: calc(-1 * var(--bs-border-width, 1px));
+  border: var(--bs-border-width, 1px) solid transparent;
+  border-top-left-radius: var(--bs-border-radius, 0.375rem);
+  border-top-right-radius: var(--bs-border-radius, 0.375rem);
+  color: var(--bs-link-color, #0d6efd);
+  cursor: pointer;
+}
+
+/* Standard-Abstand zwischen Inline-Radios entfernen */
+.ingest-tabs .radio-inline + .radio-inline {
+  margin-left: 0;
+}
+
+/* nativen Radio-Punkt ausblenden, Label bleibt klickbar */
+.ingest-tabs .radio-inline input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  margin: 0;
+}
+
+.ingest-tabs .radio-inline:hover {
+  border-color: var(--bs-secondary-bg, #e9ecef)
+    var(--bs-secondary-bg, #e9ecef)
+    var(--bs-border-color, #dee2e6);
+  isolation: isolate;
+}
+
+/* aktiver Tab (gewähltes Radio) */
+.ingest-tabs .radio-inline:has(input[type="radio"]:checked) {
+  color: var(--bs-emphasis-color, #495057);
+  background-color: var(--bs-body-bg, #fff);
+  border-color: var(--bs-border-color, #dee2e6)
+    var(--bs-border-color, #dee2e6)
+    var(--bs-body-bg, #fff);
+}
+
+/* Tastaturfokus sichtbar halten (Radio ist visuell ausgeblendet) */
+.ingest-tabs .radio-inline:has(input[type="radio"]:focus-visible) {
+  outline: 2px solid var(--bs-focus-ring-color, rgba(13, 110, 253, 0.25));
+  outline-offset: -2px;
 }

@@ -175,13 +175,10 @@ element_output_result <- tags$div(
   )
 )
 
-shiny_ui <- nd.util::nd_page(
-  .page_type="app",
-  .navbar=NULL,
-  .main=list(
-    tags$div(
-      element_input_doc,
-      element_input_options,
+shiny_ui <- nd.util::nd_app(
+  tags$div(
+    element_input_doc,
+    element_input_options,
       tags$div(
         class="my-4 d-grid",
         nd.util::nd_button_block(
@@ -195,7 +192,6 @@ shiny_ui <- nd.util::nd_page(
       element_output_result
     ),
     htmltools::suppressDependencies("font-awesome")
-  )
 )
 
 shiny_ui |> htmltools::findDependencies()
