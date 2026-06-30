@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.6.0",
+    "Version": "4.6.1",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -2333,7 +2333,6 @@
       "License": "GPL (>= 3)",
       "Encoding": "UTF-8",
       "Roxygen": "list(markdown = TRUE)",
-      "RoxygenNote": "7.3.2",
       "Imports": [
         "R6",
         "bslib",
@@ -2353,14 +2352,15 @@
         "vctrs",
         "xml2"
       ],
+      "Config/roxygen2/version": "8.0.0",
       "Author": "Moritz Pilarski [aut, cre]",
       "Maintainer": "Moritz Pilarski <moritz.pilarski@example.com>",
       "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "endikau",
       "RemoteRepo": "nd.util",
       "RemoteRef": "main",
-      "RemoteSha": "af016d7add55b0f255ef38489098f7a712e23932",
-      "RemoteHost": "api.github.com"
+      "RemoteSha": "ec17f2ad96b1573b65a433e00efa2033235918d7"
     },
     "openssl": {
       "Package": "openssl",
