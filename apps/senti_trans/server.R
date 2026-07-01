@@ -7,6 +7,10 @@ library(callr)
 
 function(input, output, session) {
 
+  # Bei kurzem Verbindungsabbruch (z. B. Proxy schließt idle WebSocket) still
+  # zur selben, weiterlaufenden Session reconnecten statt "Disconnected"-Overlay.
+  session$allowReconnect(TRUE)
+
   # TODO: find way to trigger event on app load
   .doc_senti_tbl_start <- calc_doc_germansentiment_tbl_memo_each(
     .doc_str=example_review

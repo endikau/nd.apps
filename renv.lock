@@ -2356,11 +2356,11 @@
       "Author": "Moritz Pilarski [aut, cre]",
       "Maintainer": "Moritz Pilarski <moritz.pilarski@example.com>",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "endikau",
       "RemoteRepo": "nd.util",
       "RemoteRef": "main",
-      "RemoteSha": "ec17f2ad96b1573b65a433e00efa2033235918d7"
+      "RemoteSha": "c86587c1948b4289f607b9de8fcf4288c82d18a8",
+      "RemoteHost": "api.github.com"
     },
     "openssl": {
       "Package": "openssl",

@@ -3,6 +3,10 @@ library(callr)
 
 function(input, output, session) {
 
+  # Bei kurzem Verbindungsabbruch (z. B. Proxy schließt idle WebSocket) still
+  # zur selben, weiterlaufenden Session reconnecten statt "Disconnected"-Overlay.
+  session$allowReconnect(TRUE)
+
   .tok_senti_tbl_start <- vns::calc_tok_sentidict_tbl(
     .doc_str=example_review, .sentidict_tbl=vns.data::sentiws_tbl
   )

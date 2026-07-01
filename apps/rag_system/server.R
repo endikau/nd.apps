@@ -1,4 +1,8 @@
 server <- function(input, output, session) {
+  # Bei kurzem Verbindungsabbruch (z. B. Proxy schließt idle WebSocket) still
+  # zur selben, weiterlaufenden Session reconnecten statt "Disconnected"-Overlay.
+  session$allowReconnect(TRUE)
+
   session_id <- paste0("shiny-", as.integer(Sys.time()), "-", sample(100000, 1))
   rag <- nd.util::rag_client(
     .base_url = BASE_URL,
