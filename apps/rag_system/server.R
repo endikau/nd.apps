@@ -3,7 +3,14 @@ server <- function(input, output, session) {
   # zur selben, weiterlaufenden Session reconnecten statt "Disconnected"-Overlay.
   session$allowReconnect(TRUE)
 
-  session_id <- paste0("shiny-", as.integer(Sys.time()), "-", sample(100000, 1))
+  # session_id kann über die URL-Query übergeben werden, damit mehrere separat
+  # eingebettete Bausteine (ingest/documents/chat) dieselbe RAG-Session teilen.
+  # Fehlt der Parameter, wird – wie bisher – eine eigene Session erzeugt.
+  query <- shiny::parseQueryString(isolate(session$clientData$url_search))
+  session_id <- query$session_id %||% ""
+  if (!nzchar(trimws(session_id))) {
+    session_id <- paste0("shiny-", as.integer(Sys.time()), "-", sample(100000, 1))
+  }
   rag <- nd.util::rag_client(
     .base_url = BASE_URL,
     .api_key = RAG_SERVICE_API_KEY,
