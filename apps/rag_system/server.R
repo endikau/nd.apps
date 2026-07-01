@@ -11,6 +11,7 @@ server <- function(input, output, session) {
   if (!nzchar(trimws(session_id))) {
     session_id <- paste0("shiny-", as.integer(Sys.time()), "-", sample(100000, 1))
   }
+  ui_element <- tolower(trimws(query$ui_element %||% ""))
   rag <- nd.util::rag_client(
     .base_url = BASE_URL,
     .api_key = RAG_SERVICE_API_KEY,
@@ -52,6 +53,27 @@ server <- function(input, output, session) {
       }
     )
   }, once = TRUE)
+
+  # Wird der Dokumente-Baustein eigenständig eingebettet (eigene Session), so
+  # bekommt er Ingests aus anderen iframes derselben RAG-Session nicht mit.
+  # Damit die Liste dennoch selbständig aktuell bleibt, wird sie hier periodisch
+  # nachgeladen – aber nur bei tatsächlicher Änderung neu gerendert. Im
+  # kombinierten Standard-Layout ist das nicht nötig (dort aktualisiert der
+  # Ingest die Liste direkt), daher läuft das Polling nur für diesen Baustein.
+  if (identical(ui_element, "documents")) {
+    observe({
+      invalidateLater(1000)
+      tryCatch(
+        {
+          new_docs <- rag$list_documents()
+          if (!identical(new_docs, isolate(rv$docs))) {
+            rv$docs <- new_docs
+          }
+        },
+        error = function(e) NULL
+      )
+    })
+  }
 
   observeEvent(input$ingest_btn, {
     mode <- if (identical(input$ingest_mode, "PDF")) "pdf" else "url"

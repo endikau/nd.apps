@@ -77,11 +77,10 @@ chat_card <- bslib::card(
   )
 )
 
-# Zuordnung Query-Wert -> Baustein. Mehrere Schreibweisen erlaubt.
+# Zuordnung Query-Wert -> Baustein.
 UI_ELEMENTS <- list(
   ingest = ingest_card,
   documents = documents_card,
-  dokumente = documents_card,
   chat = chat_card
 )
 
