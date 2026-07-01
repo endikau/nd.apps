@@ -39,7 +39,10 @@ server <- function(input, output, session) {
     cur_question = "",
     cur_answer = "",
     cur_sources = list(),
-    streaming = FALSE
+    streaming = FALSE,
+    # Zähler, der bei jedem abgeschlossenen Ingest erhöht wird; treibt die
+    # Baustein-übergreifende Aktualisierung der Dokumentenliste an.
+    ingest_version = 0
   )
 
   # initial document load
@@ -55,25 +58,27 @@ server <- function(input, output, session) {
   }, once = TRUE)
 
   # Wird der Dokumente-Baustein eigenständig eingebettet (eigene Session), so
-  # bekommt er Ingests aus anderen iframes derselben RAG-Session nicht mit.
-  # Damit die Liste dennoch selbständig aktuell bleibt, wird sie hier periodisch
-  # nachgeladen – aber nur bei tatsächlicher Änderung neu gerendert. Im
-  # kombinierten Standard-Layout ist das nicht nötig (dort aktualisiert der
-  # Ingest die Liste direkt), daher läuft das Polling nur für diesen Baustein.
-  if (identical(ui_element, "documents")) {
-    observe({
-      invalidateLater(1000)
-      tryCatch(
-        {
-          new_docs <- rag$list_documents()
-          if (!identical(new_docs, isolate(rv$docs))) {
-            rv$docs <- new_docs
-          }
-        },
-        error = function(e) NULL
-      )
-    })
-  }
+  # bekommt er Ingests aus anderen iframes derselben RAG-Session nicht direkt
+  # mit. Die Bausteine teilen sich jedoch Origin und session_id und melden
+  # abgeschlossene Ingests clientseitig per BroadcastChannel (siehe docsync.js);
+  # der Dokumente-Baustein löst daraufhin `external_refresh` aus und lädt die
+  # Liste neu.
+  observeEvent(input$external_refresh, {
+    tryCatch(
+      {
+        rv$docs <- rag$list_documents()
+      },
+      error = function(e) {
+        notify(paste("Dokumente laden fehlgeschlagen:", e$message), type = "warning")
+      }
+    )
+  })
+
+  # Verstecktes Output, dessen Wert-Update (Zähler) der Client per
+  # BroadcastChannel an die anderen Bausteine weiterreicht. suspendWhenHidden
+  # muss FALSE sein, damit auch das unsichtbare Output an den Browser gepusht wird.
+  output$ingest_version <- renderText(as.character(rv$ingest_version))
+  outputOptions(output, "ingest_version", suspendWhenHidden = FALSE)
 
   observeEvent(input$ingest_btn, {
     mode <- if (identical(input$ingest_mode, "PDF")) "pdf" else "url"
@@ -151,6 +156,12 @@ server <- function(input, output, session) {
                 notify(paste("Dokumente laden fehlgeschlagen:", e$message), type = "warning")
               }
             )
+            # Signal für separat eingebettete Bausteine: Zähler erhöhen. Der
+            # Client überträgt dieses Output-Update per BroadcastChannel (siehe
+            # docsync.js). Reaktive Outputs werden – anders als Custom Messages
+            # aus Timer-Observern – zuverlässig auch ohne Client-Interaktion an
+            # den Browser gepusht.
+            rv$ingest_version <- rv$ingest_version + 1
           }
         }
       },

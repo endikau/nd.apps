@@ -43,7 +43,9 @@ ingest_card <- bslib::card(
     actionButton("ingest_btn", "Ingest starten", class = "btn-primary"),
     tags$hr(),
     uiOutput("ingest_status"),
-    uiOutput("ingest_progress")
+    uiOutput("ingest_progress"),
+    # Verstecktes Signal-Output für die Baustein-übergreifende Synchronisation.
+    tags$div(style = "display: none;", textOutput("ingest_version"))
   )
 )
 
@@ -102,10 +104,11 @@ ui <- function(request) {
     .head = tagList(
       shiny::includeCSS("www/style.css"),
       tags$style(htmltools::HTML(CHAT_CSS)),
-      # Re-init-fähige Popover-Engine (für dynamisch gerenderte Chat-Inhalte)
-      # und Chat-Streaming.
+      # Re-init-fähige Popover-Engine (für dynamisch gerenderte Chat-Inhalte),
+      # Chat-Streaming und Dokumenten-Synchronisation zwischen den Bausteinen.
       shiny::includeScript("www/popover.js"),
-      shiny::includeScript("www/chatUi.js")
+      shiny::includeScript("www/chatUi.js"),
+      shiny::includeScript("www/docsync.js")
     ),
     tags$div(
       class = "d-flex flex-column gap-4",
