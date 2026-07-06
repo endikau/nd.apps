@@ -18,6 +18,11 @@ BASE_URL <- Sys.getenv(
 )
 RAG_SERVICE_API_KEY <- Sys.getenv("RAG_SERVICE_API_KEY", unset = "")
 
+# Upload-Limit für den PDF-Ingest; größere Requests lehnt Shiny mit einem
+# Upload-Fehler im fileInput ab.
+MAX_UPLOAD_MB <- 20
+options(shiny.maxRequestSize = MAX_UPLOAD_MB * 1024^2)
+
 `%||%` <- rlang::`%||%`
 
 tags <- htmltools::tags

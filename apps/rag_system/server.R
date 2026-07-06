@@ -80,6 +80,16 @@ server <- function(input, output, session) {
   output$ingest_version <- renderText(as.character(rv$ingest_version))
   outputOptions(output, "ingest_version", suspendWhenHidden = FALSE)
 
+  # Der Ingest-Button (bslib::input_task_button, auto_reset = FALSE) bleibt im
+  # Busy-Zustand, bis der asynchrone Ingest abgeschlossen oder fehlgeschlagen
+  # ist; hier wird er wieder freigegeben.
+  reset_ingest_btn <- function() {
+    bslib::update_task_button("ingest_btn", state = "ready", session = session)
+  }
+  reset_send_btn <- function() {
+    bslib::update_task_button("send_btn", state = "ready", session = session)
+  }
+
   observeEvent(input$ingest_btn, {
     mode <- if (identical(input$ingest_mode, "PDF")) "pdf" else "url"
     document_name <- trimws(input$doc_name %||% "")
@@ -88,6 +98,7 @@ server <- function(input, output, session) {
       has_pdf <- !is.null(input$pdfs) && length(input$pdfs$datapath) > 0
       if (!has_pdf) {
         notify("Bitte eine PDF auswählen.", type = "warning")
+        reset_ingest_btn()
         return()
       }
       pdf_paths <- input$pdfs$datapath
@@ -104,12 +115,14 @@ server <- function(input, output, session) {
         },
         error = function(e) {
           notify(paste("Ingest-Start fehlgeschlagen:", e$message), type = "error")
+          reset_ingest_btn()
         }
       )
     } else {
       url <- trimws(input$urls %||% "")
       if (!nzchar(url)) {
         notify("Bitte eine URL eingeben.", type = "warning")
+        reset_ingest_btn()
         return()
       }
       document_name <- if (nzchar(document_name)) document_name else NULL
@@ -125,6 +138,7 @@ server <- function(input, output, session) {
         },
         error = function(e) {
           notify(paste("URL-Ingest fehlgeschlagen:", e$message), type = "error")
+          reset_ingest_btn()
         }
       )
     }
@@ -141,6 +155,7 @@ server <- function(input, output, session) {
         rv$ingest_status <- status
         if (status$status %in% c("succeeded", "failed")) {
           rv$ingest_done <- TRUE
+          reset_ingest_btn()
           if (status$status == "failed") {
             notify(
               paste("Ingest fehlgeschlagen:", status$error %||% status$message),
@@ -148,6 +163,11 @@ server <- function(input, output, session) {
             )
           } else {
             notify("Ingest abgeschlossen", type = "message")
+            # Eingabefelder für den nächsten Ingest leeren; das fileInput hat
+            # kein update-Pendant und wird clientseitig zurückgesetzt (ingestUi.js).
+            updateTextInput(session, "urls", value = "")
+            updateTextInput(session, "doc_name", value = "")
+            session$sendCustomMessage("rag-reset-file-input", "pdfs")
             tryCatch(
               {
                 rv$docs <- rag$list_documents()
@@ -167,24 +187,12 @@ server <- function(input, output, session) {
       },
       error = function(e) {
         rv$ingest_done <- TRUE
+        reset_ingest_btn()
         notify(
           paste("Ingest-Status fehlgeschlagen:", e$message),
           type = "error"
         )
       }
-    )
-  })
-
-  output$ingest_status <- renderUI({
-    st <- rv$ingest_status
-    if (is.null(st)) {
-      return(NULL)
-    }
-    status_text <- paste0("Status: ", st$status)
-    msg <- st$message %||% ""
-    tagList(
-      div(status_text),
-      if (nzchar(msg)) div(msg) else NULL
     )
   })
 
@@ -194,14 +202,19 @@ server <- function(input, output, session) {
       return(NULL)
     }
     pct <- max(0, min(100, st$progress))
+    running <- identical(st$status, "running")
     div(
-      style = "background:#eee; height:20px; width:100%; border-radius:4px;",
+      class = "progress",
+      role = "progressbar",
+      `aria-valuenow` = pct,
+      `aria-valuemin` = "0",
+      `aria-valuemax` = "100",
       div(
-        style = paste0(
-          "height:100%; width:",
-          pct,
-          "%; background:#007bff; color:white; text-align:center; border-radius:4px;"
+        class = paste(
+          "progress-bar",
+          if (running) "progress-bar-striped progress-bar-animated"
         ),
+        style = paste0("width: ", pct, "%;"),
         paste0(pct, "%")
       )
     )
@@ -211,6 +224,7 @@ server <- function(input, output, session) {
     question <- trimws(input$question %||% "")
     if (!nzchar(question)) {
       notify("Bitte eine Frage eingeben.", type = "warning")
+      reset_send_btn()
       return()
     }
     rv$cur_question <- question
@@ -277,6 +291,7 @@ server <- function(input, output, session) {
     rv$cur_question <- ""
     rv$cur_answer <- ""
     rv$cur_sources <- list()
+    reset_send_btn()
   })
 
   observeEvent(input$chat_error, {
@@ -288,6 +303,7 @@ server <- function(input, output, session) {
     rv$cur_question <- ""
     rv$cur_answer <- ""
     rv$cur_sources <- list()
+    reset_send_btn()
   })
 
   # Gesamten Dialog serverseitig rendern (Fallstudien-Stil).
@@ -320,41 +336,37 @@ server <- function(input, output, session) {
     tagList(turns)
   })
 
-  observeEvent(input$refresh_docs, {
-    tryCatch(
-      {
-        rv$docs <- rag$list_documents()
-      },
-      error = function(e) {
-        notify(paste("Dokumente laden fehlgeschlagen:", e$message), type = "error")
-      }
-    )
-  })
-
   output$doc_list <- renderUI({
     if (is.null(rv$docs) || length(rv$docs) == 0) {
-      return(div("Keine Dokumente gefunden."))
+      return(div(class = "card-body text-muted", "Keine Dokumente gefunden."))
     }
-    tagList(lapply(rv$docs, function(d) {
-      lbl <- d$label %||% "Unbenannt"
-      btn_js <- sprintf(
-        "Shiny.setInputValue('delete_doc', %s, {priority: 'event'});",
-        jsonlite::toJSON(lbl, auto_unbox = TRUE)
-      )
-      div(
-        class = "doc-item d-flex justify-content-between align-items-center mb-2",
-        div(
-          strong(lbl),
-          span(paste0(" (", d$count %||% 0, " Einträge)"))
-        ),
-        tags$button(
-          type = "button",
-          class = "btn btn-danger btn-sm",
-          onclick = btn_js,
-          "Löschen"
+    tags$ul(
+      class = "list-group list-group-flush",
+      lapply(rv$docs, function(d) {
+        lbl <- d$label %||% "Unbenannt"
+        btn_js <- sprintf(
+          "Shiny.setInputValue('delete_doc', %s, {priority: 'event'});",
+          jsonlite::toJSON(lbl, auto_unbox = TRUE)
         )
-      )
-    }))
+        tags$li(
+          class = paste(
+            "list-group-item d-flex justify-content-between",
+            "align-items-center gap-2"
+          ),
+          div(
+            strong(lbl),
+            span(paste0(" (", d$count %||% 0, " Einträge)"))
+          ),
+          tags$button(
+            type = "button",
+            class = "btn btn-outline-danger btn-sm text-nowrap",
+            onclick = btn_js,
+            tags$i(class = "fa-solid fa-trash-can", role = "presentation"),
+            "Löschen"
+          )
+        )
+      })
+    )
   })
 
   observeEvent(input$delete_doc, {

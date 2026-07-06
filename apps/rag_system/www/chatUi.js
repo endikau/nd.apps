@@ -136,11 +136,11 @@
     refresh();
   }
 
-  // Absenden per Enter im Frage-Feld.
+  // Absenden per Enter im Frage-Feld (Shift+Enter fügt einen Zeilenumbruch ein).
   document.addEventListener("keypress", (evt) => {
     const tgt = evt.target;
     if (!tgt || tgt.id !== "question") return;
-    if (evt.key === "Enter" && (tgt.value || "").trim().length > 0) {
+    if (evt.key === "Enter" && !evt.shiftKey && (tgt.value || "").trim().length > 0) {
       const btn = document.getElementById("send_btn");
       if (btn) {
         btn.click();
