@@ -1,0 +1,52 @@
+Produktionsbesprechung KW 20 — 13.05.2025
+Teilnehmer: T. Wagner (Produktionsleitung), M. Schäfer (Schicht Früh), R. Özdemir
+(Schicht Spät), A. Berger (QM), F. Krause (Instandhaltung)
+Protokoll: A. Berger
+Beginn: 7:30, Ende: 8:15
+
+
+1. Auftragslage / laufende Aufträge
+   •   Großauftrag Müller Automotive läuft planmäßig, Liefertermin 28.05. hält
+   •   Auftrag Hartmann GmbH liegt 2 Tage hinter Plan — Krankheitsausfälle KW 19
+   •   Nachholbedarf bis Ende KW 20, Frühschicht zieht an
+   •   Kleinserie Bender (Edelstahlteile) startet Mittwoch
+   •   Auftrag Schneider Werkzeugbau: Anfrage zur Vorverlegung um eine Woche, noch
+       nicht geklärt — Wagner spricht morgen mit Vertrieb
+2. Materialengpass Vormaterial S355
+   •   Stammlieferant Hofmann meldet Lieferverzögerung 3-4 Wochen
+   •   Betri_t direkt Auftrag Hartmann sowie geplante Aufträge ab KW 22
+   •   Alternativen geprüft: Lieferant Brandt aus NRW kann liefern, allerdings Aufpreis
+       ca. 8%
+   •   Diskussion ob Aufpreis tragbar — bei Hartmann ja, Marge reicht, bei der
+       Schneider-Anfrage müsste neu kalkuliert werden
+   •   → Beschluss: Brandt anfragen für Hartmann-Bedarf + Pu_er für KW 22/23,
+       Bestellung diese Woche raus
+   •   Wagner gibt Bescheid an Einkauf (Frau Linde), Bestellung soll bis Do raus
+3. Ausschussquote CNC-Bearbeitungszentrum 3
+   •   Ausschuss letzte Woche bei 4,2% (sonst um 1,5%)
+   •   Betri_t v.a. Bohrungen mit engen Toleranzen
+   •   Verdacht: Spindellager — leichtes Spiel beobachtet, Vibrationen seit ca. 10 Tagen
+       au_ällig
+   •   Krause hatte regulären Service erst für KW 24 geplant
+   •   → Beschluss: Wartung vorziehen, Maschine kommendes WE außer Betrieb, Lager
+       prüfen ggf. tauschen
+   •   Krause organisiert Servicetechniker für Sa 17.05.
+   •   Bis dahin: kritische Teile auf CNC 2 umlegen wo möglich, Özdemir koordiniert
+       Spätschicht entsprechend
+
+
+   •   Berger zieht zusätzliche Stichproben in Frühschicht, dokumentiert in QM-System
+4. Arbeitssicherheit
+   •   Beinahe-Unfall in Spätschicht letzten Mi — Gabelstapler / Stellplatz an Halle 2
+       schlecht ausgeleuchtet
+   •   Özdemir hatte das schon gemeldet
+   •   Krause prüft Beleuchtungssituation, Vorschlag zusätzliche LED-Strahler bis Ende
+       Mai
+   •   Unterweisung zum Thema Verkehrswege Halle 2 wird in nächster
+       Sicherheitsunterweisung aufgegri_en (Termin steht noch nicht)
+5. Sonstiges
+   •   Sommerurlaub-Planung: Frist für Urlaubsmeldungen bis 31.05., bitte Wagner
+       direkt
+   •   Berger erinnert: ISO-Audit im Septmeber, Vorbereitung Dokumentation läuft,
+       Details in eigener Runde Anfang Juni
+Nächste Besprechung: Di 20.05., 7:30 Uhr

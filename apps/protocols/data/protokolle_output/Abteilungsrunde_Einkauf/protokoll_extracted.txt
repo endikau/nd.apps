@@ -1,0 +1,64 @@
+Abteilungsrunde Einkauf & Disposition — 18.03.2026
+Teilnehmer:
+S. Hartwig (Einkaufsleitung), N. Celik (Disposition), T. Maurer (Produktion), K. Brenner
+(Qualität), J. Fuchs (Assistenz Einkauf)
+Protokoll: Fuchs
+Beginn: 08:15
+Ende: 09:35
+1. Allgemeine Versorgungslage / Lieferanten
+Hartwig eröRnet die Runde mit Hinweis dass die Liefersituation sich „minimal beruhigt“,
+aber weiterhin kritisch bleibt bei elektronischen Bauteilen und bestimmten
+Aluminiumprofilen. Besonders betroRen aktuell der Lieferant Riedel Components, dort
+erneut Verzögerungen wegen fehlender Vorprodukte. Celik berichtet dass zwei
+Lieferungen aus KW 10 noch immer unvollständig eingetroRen sind.
+Maurer merkt an dass die Produktion letzte Woche bereits umplanen musste weil
+Material für Serie K-210 nicht vollständig vorhanden war. Dadurch seien andere Aufträge
+vorgezogen worden was wiederum Probleme im Ablauf erzeugt habe. Laut Maurer „geht
+das nicht noch vier Wochen so weiter“.
+Diskussion ob Sicherheitsbestände erhöht werden sollen. Hartwig eher skeptisch wegen
+steigender Lagerkosten. Brenner weist darauf hin dass Reklamationen zunehmen
+sobald kurzfristig alternative Lieferanten eingesetzt werden.
+Beschlüsse:
+   •   Celik aktualisiert die kritische Teileliste bis nächste Woche.
+   •   Hartwig meldet die Bedarfe bei den A-Lieferanten bis Juli frühzeitig an.
+   •   Alternative Bezugsquellen dürfen nur nach Freigabe durch Brenner bzw. QM
+       genutzt werden.
+2. Qualitätsprobleme Lieferant Sauter GmbH
+Brenner berichtet über auRällige Fehlerquote bei letzter Charge KunststoRgehäuse.
+Mehrere Teile mit Gratbildung und teilweise Maßabweichungen. Der Wareneingang habe
+11% Ausschuss festgestellt was deutlich über Normalwert liegt.
+Maurer sagt einige Teile konnten zwar nachbearbeitet werden, allerdings mit
+zusätzlichem Aufwand in der Montage. Celik ergänzt dass Sauter bereits im vergangenen
+Jahr ähnliche Probleme verursacht habe.
+Hartwig möchte das Thema zunächst „nicht größer machen als nötig“, solange
+Lieferfähigkeit stabil bleibt. Brenner sieht das deutlich kritischer. Diskussion kurz etwas
+angespannt.
+Ergebnisse:
+   •   Brenner versendet die oRizielle Reklamation bis heute Nachmittag.
+   •   Brenner organisiert zusätzlich eine Sonderprüfung bei der nächsten Lieferung.
+
+
+   •   Hartwig vereinbart einen Termin mit dem Lieferanten falls erneut Fehler
+       auftreten.
+3. ERP-System / Bestellprozesse
+Fuchs berichtet dass einige Bestellungen weiterhin doppelt im System auftauchen.
+Ursache vermutlich fehlerhafte Synchronisation zwischen ERP und Freigabemodul. IT
+wurde informiert, bisher aber noch ohne konkrete Rückmeldung.
+Celik erklärt dass dadurch vergangene Woche versehentlich zwei identische Abrufe
+ausgelöst wurden. Problem wurde glücklicherweise rechtzeitig bemerkt bevor Ware
+verschickt wurde.
+Hartwig zeigt sich genervt weil „ständig digitale Optimierung angekündigt wird und am
+Ende mehr Aufwand entsteht“.
+Maurer fragt ob man kurzfristig wieder mit manuellen Freigaben arbeiten sollte. Wurde
+verworfen da zusätzlicher Aufwand zu hoch wäre.
+Aufgaben:
+   •   Fuchs dokumentiert die bekannten Systemfehler bis Freitag gesammelt für die IT.
+   •   Celik prüft alle oRenen Bestellungen der letzten zwei Wochen auf Dubletten.
+   •   Hartwig fordert bis nächste Sitzung eine Rückmeldung der IT-Abteilung an.
+4. Sonstiges
+   •   Alle tragen die Urlaubsplanung für Ostern bis Freitag final ein.
+   •   Die KaReemaschine im 2. OG weiterhin defekt, Fuchs fragt beim Service nach.
+   •   Besuch der Geschäftsführung nächste Woche angekündigt.
+   •   Brenner erinnert an Audit im Juni, Fuchs prüft vorher die Einkaufsdokumentation.
+   •   Celik am Donnerstag nicht im Haus, Vertretung übernimmt Fuchs.
+Nächste Runde: Mittwoch 01.04., 08:15 Uhr

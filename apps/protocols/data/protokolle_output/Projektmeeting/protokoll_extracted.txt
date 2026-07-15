@@ -1,0 +1,46 @@
+Projektmeeting „Phoenix“ — 07.05.2026
+Teilnehmer:
+L. Winter (Projektleitung), A. Sahin (Entwicklung), P. Römer (Controlling), D. Yilmaz (IT),
+E. Schulte (Operations)
+Mitschrift teilweise von Winter / teilweise Römer
+Beginn 13:00
+Ende gegen 14:40
+Status Projekt allgemein
+Winter sagt dass Projekt Phoenix aktuell „leicht hinter Plan aber noch beherrschbar“ sei.
+Hauptproblem weiter die Schnittstelle zum alten Bestandssystem. Yilmaz bestätigt dass
+Datenstruktur deutlich komplizierter als ursprünglich angenommen.
+Sahin berichtet dass mehrere Tests fehlgeschlagen sind weil Altdaten unvollständig
+importiert wurden. Vor allem historische Kundendaten machen Probleme. Teilweise
+fehlen Datumsfelder komplett oder Formate stimmen nicht.
+Römer fragt mehrfach nach Kostenentwicklung weil externe Dienstleister inzwischen
+deutlich mehr Stunden schreiben als kalkuliert. Winter meint das sei aktuell noch
+innerhalb Pu]er, aber viel Reserve gebe es nicht mehr.
+Testphase
+   •   letzter Integrationstest nur teilweise erfolgreich
+   •   Benutzerrechte funktionierten nicht sauber
+   •   zwei Testuser hatten plötzlich Adminrechte (!)
+   •   Fehler inzwischen gefunden laut Yilmaz
+   •   Ursache wohl alte Rollenlogik aus Legacy-System
+Schulte merkt an dass Fachabteilungen langsam ungeduldig werden weil mehrfach
+angekündigte Termine verschoben wurden.
+Diskussion ob Go-Live eventuell um 3 Wochen verschoben werden muss. Winter
+möchte das möglichst vermeiden da sonst Folgeprojekte betro]en wären.
+Kommunikation mit GF
+Römer sagt die Geschäftsführung wolle kommende Woche „klare Aussagen statt
+technische Details“. Winter soll daher Statusbericht vereinfachen und Fokus auf Risiken
++ Zeitplan legen.
+Sahin etwas genervt darüber weil technische Probleme dadurch unterschätzt würden.
+Kurze Diskussion darüber wie o]en man Probleme kommunizieren soll.
+Beschluss:
+   •   neue Risikoübersicht erstellen
+   •   Ampelstatus einführen
+   •   Kostenprognose bis Montag aktualisieren
+
+
+Weitere Punkte
+   •   VPN-Zugänge für externe Tester fehlen teilweise noch
+   •   Schulte benötigt finale Prozessdokumentation bis Ende Mai
+   •   nächste Testphase startet vermutlich Dienstag
+   •   Yilmaz Donnerstag im Homeo]ice wegen Technikertermin
+   •   Meetingraum 3 nächstes mal vermeiden → Beamer „katastrophe“
+Nächstes Meeting am 14.05., gleicher Teilnehmerkreis.

@@ -1,0 +1,52 @@
+IT-Infrastruktur-Jour-Fixe — 14.05.2026
+Teilnehmer: P. Eichner (IT-Leitung), M. Köhler (Admin), T. Berisha (Admin), L. Frank
+(externe Beratung Müller-IT) Protokoll: M. Köhler Beginn: 10:00, Ende: 11:15
+
+
+1. Server-Migration alte Domäne
+   •   Migration File-Server FS-01 → FS-NEU läuft seit zwei Wochen
+   •   Aktueller Stand: ca. 70% der Abteilungen umgezogen, Vertrieb + Buchhaltung
+       noch oWen
+   •   Performance auf neuem Server merkbar besser, Beschwerden weniger geworden
+   •   Buchhaltung will wegen Monatsabschluss erst nach dem 5.6. umgezogen werden
+       — okay
+   •   Vertrieb-Migration für Pfingstwochenende geplant, Köhler koordiniert
+       Wartungsfenster
+   •   Frank prüft nochmal Backup-Strategie für die migrierten Shares, Doku bis Ende
+       Mai
+2. Sicherheitsvorfall in der Branche
+   •   In der vergangenen Woche mehrere Phishing-Wellen bei Unternehmen in der
+       Region, gezielt auf Buchhaltungen
+   •   Auch bei uns 2 verdächtige Mails aufgetaucht, wurden gemeldet, keine Klicks
+       soweit erkennbar
+   •   Diskussion ob zusätzliche Awareness-Schulung nötig
+   •   → Beschluss: kurze Awareness-AuWrischung für alle Mitarbeitenden, Format: 30-
+       Min-Online-Session
+   •   Eichner koordiniert mit HR, Termin bis Ende Juni
+   •   Zusätzlich: Mailfilter-Regeln werden von Berisha verschärft, Test in Dev-
+       Umgebung diese Woche
+3. Backup-Audit
+   •   Letzte Vollprüfung 02/2026, also überfällig
+   •   Stichproben-Restores werden diese und nächste Woche durchgeführt
+   •   Köhler übernimmt File-Server-Restore, Berisha den DB-Restore (ERP-System)
+   •   Frank schaut ergänzend auf die OWsite-Backups, Bericht in 2 Wochen
+4. Lizenzverlängerung Virtualisierungs-Plattform
+   •   Lizenz läuft 31.07. aus
+   •   Hersteller hat Preiserhöhung angekündigt (~22% gegenüber Vorjahr), das ist
+       sportlich
+
+
+   •   Frank empfiehlt zumindest ein Vergleichsangebot von Proxmox bzw. Hyper-V
+       einzuholen — auch wenn ein Wechsel kurzfristig nicht realistisch ist, das stärkt
+       die Verhandlungsposition
+   •   Eichner spricht mit GF wegen Budget, bringt das Thema in nächste GF-Sitzung
+   •   Köhler holt informell zwei Alternativangebote ein
+5. Mitarbeiterthemen
+   •   Onboarding neuer Werkstudent (Hr. Demir) ab 01.06., Berisha kümmert sich um
+       Account-Anlage + Hardware
+   •   Urlaubsplanung Sommer: bitte bis 31.05. an Eichner
+6. Sonstiges
+   •   Druckerproblem 3. OG (Marketing) — Frank klärt mit Lieferant, läuft schon
+   •   Klima im Serverraum: Sensor zeigt zeitweise zu hohe Werte, technischer Check
+       für Sa angesetzt
+Nächster Termin: Mi 28.05., 10:00

@@ -1,0 +1,49 @@
+Sprint Review KW 20 — 15.05.2026
+Teilnehmer: D. Krämer (PL), S. Vogel (Backend), N. Aydin (Frontend), J. Lorenz (QA), C.
+Sauer (DevOps) Protokoll: N. Aydin Beginn: 14:00, Ende: 15:10
+
+
+1. Sprint-Ziele Rückblick (KW 18-20)
+   •   6 von 8 Stories abgeschlossen — solider Stand
+   •   Story "Multi-Tenancy für Mandant Kettler" rausgenommen, Anforderungen vom
+       Kunden noch unklar, geht in nächsten Sprint
+   •   Story "Reporting-Export PDF" technisch fertig, hängt noch im Review bei Sauer
+   •   Burndown sieht okay aus, kleiner Stau in der Mitte der Woche wegen Hotfix (siehe
+       TOP 3)
+2. Demo / Showcase
+   •   Vogel demonstriert neues Auth-Modul (SSO-Anbindung für Kunde Brenner
+       Logistik)
+   •   Funktioniert in Staging, Produktivgang geplant für nächste Woche
+   •   Lorenz hat noch zwei Edge-Cases o`en: Login mit abgelaufenem Token +
+       Rollenwechsel mitten in Session — werden bis Mi getestet
+   •   Aydin zeigt UI-Updates Dashboard, generell positives Feedback, kleinere
+       Anpassungen am Filtermenü gewünscht
+3. Produktionsproblem Kunde Hartmann GmbH
+   •   Donnerstag Vormittag Bug im Produktivsystem: Auftragsdaten doppelt im Export
+       aufgetaucht
+   •   Sauer + Vogel haben Hotfix in ~3h deployed, Kommunikation an Kunde erfolgt
+   •   Root Cause: Race Condition beim parallel Export — wurde durch Lasterhöhung
+       getriggert
+   •   → Beschluss: Refactoring der Export-Pipeline notwendig, kein Quick Fix sondern
+       sauber. Story in Backlog priorisieren
+   •   Vogel schreibt ausführliches Post-Mortem bis Ende der Woche, geht auch an die
+       GF
+4. Ticketsystem-Wechsel
+   •   Aktuell GitLab Issues + Trello-Board, doppelte Pflege nervt alle
+   •   Optionen besprochen: nur GitLab nutzen (Boards-Feature ausbauen) oder zu
+       Linear bzw. Jira wechseln
+   •   Krämer eher pro GitLab-Konsolidierung, Aydin und Lorenz tendieren zu Linear
+       (besseres UI)
+
+
+   •   Keine Entscheidung heute, Krämer holt nächste Woche Aufwandsschätzungen
+       ein
+   •   Vertagt auf nächstes Retro-Meeting (KW 22)
+5. Folgeprojekt Brenner Logistik
+   •   Kunde hat Interesse an Erweiterung um Lager-Modul signalisiert
+   •   Vertrieb braucht von uns eine grobe Aufwandsschätzung bis Mi 21.05.
+   •   Krämer bereitet Schätzung vor, stimmt sich mit Vogel zur Architektur ab
+6. Sonstiges
+   •   Teamevent Mitte Juni — Doodle kommt von Aydin diese Woche
+   •   Sauer urlaubt KW 23 und 24, Bereitschaft übernimmt Vogel — bitte Kalender
+       pflegen
