@@ -2,6 +2,10 @@ library(shiny)
 library(htmltools)
 library(stringi)
 
+shiny::addResourcePath(
+  prefix = "assets",
+  directoryPath = here::here("node_modules", "@endikau", "nd_assets", "dist")
+)
 
 data <- qs2::qs_read(here::here(
   "apps",
