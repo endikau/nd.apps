@@ -46,8 +46,7 @@ rag_format_response <- function(.answer, .sources = list()) {
       "<a tabindex=\"0\" role=\"button\" data-bs-toggle=\"popover\" ",
       "data-bs-template-id=\"",
       htmltools::htmlEscape(.id),
-      "\"><span class=\"text-primary\"><i class=\"fa-solid fa-circle-info\" ",
-      "role=\"presentation\"></i></span></a>"
+      "\"><i class=\"fa-solid fa-circle-info\" role=\"presentation\"></i></a>"
     )
   }
 
