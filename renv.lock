@@ -2383,14 +2383,12 @@
         "xml2"
       ],
       "Config/roxygen2/version": "8.0.0",
-      "Author": "Moritz Pilarski [aut, cre]",
-      "Maintainer": "Moritz Pilarski <moritz.pilarski@example.com>",
       "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "endikau",
       "RemoteRepo": "nd.util",
       "RemoteRef": "main",
-      "RemoteSha": "c86587c1948b4289f607b9de8fcf4288c82d18a8",
-      "RemoteHost": "api.github.com"
+      "RemoteSha": "d732743b2315c61a27e9c7e5254ac1de4a0b15f5"
     },
     "openssl": {
       "Package": "openssl",

@@ -11,7 +11,28 @@ icon_fa <- function(.fa_class){
 
 element_input_doc <- tags$div(
   class="card my-0",
-  tags$div(class="card-header", "Text festlegen"),
+  tags$div(
+    class="card-header d-flex align-items-center justify-content-between gap-2",
+    "Text festlegen",
+    nd.util::nd_popover(
+      .title="Hinweise zur Eingabe",
+      tags$p(
+        "Sie können den vorgegebenen Text überschreiben und einen eigenen ",
+        "Text analysieren lassen – oder sich mit „Vorschlag generieren“ ein ",
+        "zufälliges Beispiel laden."
+      ),
+      tags$p(
+        "Ihr Text wird ausschließlich für den Betrieb dieser App verarbeitet ",
+        "und dient allein der Analyse, die Sie hier auslösen."
+      ),
+      tags$p(
+        class="mb-0",
+        "Er wird nicht dauerhaft gespeichert und nicht zu anderen Zwecken ",
+        "ausgewertet. Mit dem Ende Ihrer Sitzung ist die Eingabe nicht mehr ",
+        "verfügbar."
+      )
+    )
+  ),
   tags$div(
     class="form-group shiny-input-container z-index-5",
     style="width: 100%; z-index: 1000;",
@@ -77,7 +98,34 @@ element_input_options <- tags$div(
 
 element_output_result <- tags$div(
   class="card",
-  tags$div(class="card-header", "Ergebnis"),
+  tags$div(
+    class="card-header d-flex align-items-center justify-content-between gap-2",
+    "Ergebnis",
+    nd.util::nd_popover(
+      .title="Wie das Label zustande kommt",
+      tags$p(
+        "Die Einschätzung stammt von ",
+        tags$a(
+          href="https://huggingface.co/oliverguhr/german-sentiment-bert",
+          target="_blank", rel="noopener", "German Sentiment BERT"
+        ),
+        " – einem BERT-Modell, das eigens für die Stimmungsbewertung ",
+        "deutscher Texte nachtrainiert wurde."
+      ),
+      tags$p(
+        "Das Modell verteilt eine Wahrscheinlichkeit auf die drei Klassen ",
+        "positiv, neutral und negativ. Angezeigt wird die Klasse mit dem ",
+        "höchsten Wert."
+      ),
+      tags$p(
+        class="mb-0",
+        "Die Prozentangabe ist genau diese Wahrscheinlichkeit. Sie sagt ",
+        "also, wie sicher sich das Modell ist – nicht, wie stark die ",
+        "Stimmung ausfällt. Abstufungen wie „schwach positiv“ und einen ",
+        "kontinuierlichen Sentimentwert gibt es hier deshalb nicht."
+      )
+    )
+  ),
   tags$div(
     class="",
     tags$div(

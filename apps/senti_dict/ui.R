@@ -42,7 +42,28 @@ legend_sentiment <- tags$svg(
 
 element_input_doc <- tags$div(
   class="card my-0",
-  tags$div(class="card-header", "Text festlegen"),
+  tags$div(
+    class="card-header d-flex align-items-center justify-content-between gap-2",
+    "Text festlegen",
+    nd.util::nd_popover(
+      .title="Hinweise zur Eingabe",
+      tags$p(
+        "Sie können den vorgegebenen Text überschreiben und einen eigenen ",
+        "Text analysieren lassen – oder sich mit „Vorschlag generieren“ ein ",
+        "zufälliges Beispiel laden."
+      ),
+      tags$p(
+        "Ihr Text wird ausschließlich für den Betrieb dieser App verarbeitet ",
+        "und dient allein der Analyse, die Sie hier auslösen."
+      ),
+      tags$p(
+        class="mb-0",
+        "Er wird nicht dauerhaft gespeichert und nicht zu anderen Zwecken ",
+        "ausgewertet. Mit dem Ende Ihrer Sitzung ist die Eingabe nicht mehr ",
+        "verfügbar."
+      )
+    )
+  ),
   tags$div(
     class="form-group shiny-input-container z-index-5",
     style="width: 100%; z-index: 1000;",
@@ -96,7 +117,50 @@ element_input_doc <- tags$div(
 
 element_input_options <- tags$div(
   class="card mt-2",
-  tags$div(class="card-header", "Lexikon auswählen"),
+  tags$div(
+    class="card-header d-flex align-items-center justify-content-between gap-2",
+    "Lexikon auswählen",
+    nd.util::nd_popover(
+      .title="Die beiden Lexika",
+      tags$p(
+        tags$strong("SentiWS"), " (SentimentWortschatz, Universität Leipzig) ",
+        "gewichtet jedes Wort mit einem Polaritätswert zwischen -1 und +1. ",
+        "Einzelne Wörter tragen dadurch unterschiedlich stark zum Ergebnis ",
+        "bei. In dieser App sind 34.808 Wortformen hinterlegt."
+      ),
+      tags$p(
+        tags$strong("German Polarity Clues"), " (Ulli Waltinger, Universität ",
+        "Bielefeld) entstand halbautomatisch durch Übersetzung englischer ",
+        "Ressourcen mit anschließender manueller Prüfung. Es kennt nur die ",
+        "drei Klassen positiv, negativ und neutral – ohne Abstufung. In ",
+        "dieser App sind 39.229 Einträge hinterlegt."
+      ),
+      tags$p(
+        class="mb-0",
+        "Mehr dazu: ",
+        tags$a(
+          href="https://wortschatz.uni-leipzig.de/de/download",
+          target="_blank", rel="noopener", "SentiWS"
+        ),
+        " (",
+        tags$a(
+          href="https://aclanthology.org/L10-1339/",
+          target="_blank", rel="noopener", "Paper"
+        ),
+        ") · ",
+        tags$a(
+          href="https://www.ulliwaltinger.de/sentiment/",
+          target="_blank", rel="noopener", "German Polarity Clues"
+        ),
+        " (",
+        tags$a(
+          href="https://aclanthology.org/L10-1053/",
+          target="_blank", rel="noopener", "Paper"
+        ),
+        ")"
+      )
+    )
+  ),
   tags$div(
     id="input_senti_dict",
     class="form-group shiny-input-radiogroup p-3",
@@ -130,7 +194,35 @@ element_input_options <- tags$div(
 
 element_output_result <- tags$div(
   class="card",
-  tags$div(class="card-header", "Ergebnis"),
+  tags$div(
+    class="card-header d-flex align-items-center justify-content-between gap-2",
+    "Ergebnis",
+    nd.util::nd_popover(
+      .title="Wie der Wert zustande kommt",
+      tags$p(
+        "Der Text wird in Tokens zerlegt und jedes Token in Kleinschreibung ",
+        "im gewählten Lexikon nachgeschlagen. Treffer bringen ihren ",
+        "Polaritätswert mit, alle übrigen Tokens zählen als 0."
+      ),
+      tags$p(
+        "Der Sentimentwert ist die Summe dieser Werte, geteilt durch die ",
+        "Anzahl der gefundenen Sentimentwörter plus log(1 + Anzahl der ",
+        "übrigen Tokens). Der Logarithmus dämpft den Einfluss der Textlänge: ",
+        "In einem langen Text ohne weitere Treffer fällt ein einzelnes ",
+        "starkes Wort weniger ins Gewicht."
+      ),
+      tags$p(
+        "Aus dem Wert entsteht über feste Schwellen (±0,002, ±0,010, ±0,025) ",
+        "eines von sieben Labels – von „Sehr negative Stimmung“ bis „Sehr ",
+        "positive Stimmung“. Farbe und Emoji folgen diesem Label."
+      ),
+      tags$p(
+        class="mb-0",
+        "Unter „Erläuterung“ ist der Text eingefärbt: Die Farbe eines Wortes ",
+        "zeigt, welcher Polaritätsklasse es im Lexikon zugeordnet ist."
+      )
+    )
+  ),
   tags$div(
     class="",
     tags$div(

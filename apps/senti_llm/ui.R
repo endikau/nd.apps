@@ -11,7 +11,32 @@ icon_fa <- function(.fa_class) {
 
 element_input_doc <- tags$div(
   class = "card my-0",
-  tags$div(class = "card-header", "Text festlegen"),
+  tags$div(
+    class = "card-header d-flex align-items-center justify-content-between gap-2",
+    "Text festlegen",
+    nd.util::nd_popover(
+      .title = "Hinweise zur Eingabe",
+      tags$p(
+        "Sie können den vorgegebenen Text überschreiben und einen eigenen ",
+        "Text analysieren lassen – oder sich mit „Vorschlag generieren“ ein ",
+        "zufälliges Beispiel laden."
+      ),
+      tags$p(
+        "Ihr Text wird ausschließlich für den Betrieb dieser App verarbeitet ",
+        "und dient allein der Analyse, die Sie hier auslösen."
+      ),
+      tags$p(
+        "Für die Analyse wird er an den LLM-Dienst des HRZ der ",
+        "Justus-Liebig-Universität Gießen übermittelt."
+      ),
+      tags$p(
+        class = "mb-0",
+        "Er wird nicht dauerhaft gespeichert und nicht zu anderen Zwecken ",
+        "ausgewertet. Mit dem Ende Ihrer Sitzung ist die Eingabe nicht mehr ",
+        "verfügbar."
+      )
+    )
+  ),
   tags$div(
     class = "form-group shiny-input-container z-index-5",
     style = "width: 100%; z-index: 1000;",
@@ -48,7 +73,32 @@ element_input_doc <- tags$div(
 
 element_output_result <- tags$div(
   class = "card",
-  tags$div(class = "card-header", "Ergebnis"),
+  tags$div(
+    class = "card-header d-flex align-items-center justify-content-between gap-2",
+    "Ergebnis",
+    nd.util::nd_popover(
+      .title = "Wie das Label zustande kommt",
+      tags$p(
+        "Die Einschätzung stammt von einem großen Sprachmodell (Gemma), das ",
+        "über den LLM-Dienst des HRZ der Justus-Liebig-Universität Gießen ",
+        "angesprochen wird."
+      ),
+      tags$p(
+        "Das Modell erhält die Anweisung, die Stimmung des Textes zu ",
+        "bestimmen und sich für genau einen der drei Werte negativ, neutral ",
+        "oder positiv zu entscheiden. Die Antwort wird in einem festen ",
+        "JSON-Format erzwungen, damit nur diese drei Werte zurückkommen ",
+        "können."
+      ),
+      tags$p(
+        class = "mb-0",
+        "Anders als bei den anderen Verfahren gibt es dabei weder einen ",
+        "Zahlenwert noch eine Wahrscheinlichkeit. Das Modell begründet seine ",
+        "Wahl nicht, und derselbe Text kann in zwei Durchläufen ",
+        "unterschiedlich eingestuft werden."
+      )
+    )
+  ),
   tags$div(
     class = "",
     tags$div(
