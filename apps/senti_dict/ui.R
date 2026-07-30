@@ -116,7 +116,7 @@ element_input_doc <- tags$div(
 )
 
 element_input_options <- tags$div(
-  class="card mt-2",
+  class="card mt-4",
   tags$div(
     class="card-header d-flex align-items-center justify-content-between gap-2",
     "Lexikon auswählen",
