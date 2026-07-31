@@ -3850,11 +3850,11 @@
         "R (>= 2.10)"
       ],
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "m-pilarski",
       "RemoteRepo": "vns",
       "RemoteRef": "main",
-      "RemoteSha": "8479b30ea861b8add69a07b59166a206c27cd335"
+      "RemoteSha": "8479b30ea861b8add69a07b59166a206c27cd335",
+      "RemoteHost": "api.github.com"
     },
     "vns.data": {
       "Package": "vns.data",
@@ -3880,6 +3880,42 @@
       "RemoteRef": "main",
       "RemoteSha": "2c006b17be286b8a0ae420ef7284f9d3aad283a3",
       "RemoteHost": "api.github.com"
+    },
+    "watcher": {
+      "Package": "watcher",
+      "Version": "0.2.0",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Watch the File System for Changes",
+      "Authors@R": "c( person(\"Charlie\", \"Gao\", , \"charlie.gao@posit.co\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0002-0750-061X\")), person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"), comment = c(ROR = \"03wc8by49\")), person(\"Enrico M.\", \"Crisostomo\", role = \"cph\", comment = \"libfswatch library\"), person(\"Alan\", \"Dipert\", role = \"cph\", comment = \"libfswatch library\") )",
+      "Description": "R binding for 'libfswatch', a file system monitoring library. Watch files, or directories recursively, for changes in the background.  Log activity, or call an R function, upon every change event.",
+      "License": "MIT + file LICENSE",
+      "URL": "https://watcher.r-lib.org, https://github.com/r-lib/watcher",
+      "BugReports": "https://github.com/r-lib/watcher/issues",
+      "Depends": [
+        "R (>= 3.5)"
+      ],
+      "Imports": [
+        "later",
+        "R6",
+        "rlang"
+      ],
+      "Suggests": [
+        "testthat (>= 3.0.0)"
+      ],
+      "Biarch": "true",
+      "Config/Needs/website": "tidyverse/tidytemplate",
+      "Config/roxygen2/markdown": "TRUE",
+      "Config/roxygen2/version": "8.0.0",
+      "Config/testthat/edition": "3",
+      "Config/usethis/last-upkeep": "2025-04-23",
+      "Encoding": "UTF-8",
+      "SystemRequirements": "'libfswatch' (optional, bundled copy compiled otherwise)",
+      "NeedsCompilation": "yes",
+      "Author": "Charlie Gao [aut, cre] (ORCID: <https://orcid.org/0000-0002-0750-061X>), Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>), Enrico M. Crisostomo [cph] (libfswatch library), Alan Dipert [cph] (libfswatch library)",
+      "Maintainer": "Charlie Gao <charlie.gao@posit.co>",
+      "Repository": "https://p3m.dev/cran/__linux__/manylinux_2_28/latest",
+      "Platform": "x86_64-pc-linux-gnu-manylinux_2_24"
     },
     "withr": {
       "Package": "withr",
