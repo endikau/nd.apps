@@ -2,6 +2,11 @@ services:
   nd_apps-shiny_serve:
     image: ${ND_APPS_IMAGE:-nd_apps-shiny_serve:local}
     restart: unless-stopped
+    # torch ist ein CUDA-Build (+cu130); ohne die folgende Zeile laeuft er auf
+    # CPU und die rund 3 GB CUDA-Bibliotheken im Image sind totes Gewicht.
+    # Auskommentiert, weil sie auf Hosts ohne nvidia-container-toolkit den
+    # Start verhindert — auf der GPU-Maschine einkommentieren.
+    # gpus: all
     ports:
       - "12347:3838"
     logging:

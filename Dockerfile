@@ -53,7 +53,12 @@ ENV RENV_PATHS_CACHE=/tmp/renv-cache \
 
 WORKDIR /srv/shiny-server/apps
 
-COPY --chown=shiny:shiny . .
+# Reihenfolge nach Aenderungshaeufigkeit, seltenstes zuerst: ein neuer Layer
+# invalidiert alle folgenden. Der Quellcode gehoert deshalb ans Ende, sonst
+# bekommen die mehrere GB grossen Abhaengigkeits-Layer bei jedem Commit eine
+# neue Digest und werden beim Deploy vollstaendig neu gezogen.
+COPY --from=python-deps --chown=shiny:shiny \
+    /opt/nd/venv/ /opt/nd/venv/
 COPY --from=r-deps --chown=shiny:shiny \
     /project/renv/library/ ./renv/library/
 RUN set -eu; \
@@ -64,5 +69,4 @@ RUN set -eu; \
     ln -s "${r_library}" /opt/nd/R/library
 COPY --from=node-deps --chown=shiny:shiny \
     /project/node_modules/ ./node_modules/
-COPY --from=python-deps --chown=shiny:shiny \
-    /opt/nd/venv/ /opt/nd/venv/
+COPY --chown=shiny:shiny . .

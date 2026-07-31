@@ -51,8 +51,8 @@ jobs:
             --secret id=npmrc,src=/tmp/.npmrc \
             "${secret_args[@]}" \
             --build-arg RUNTIME_TAG="${RUNTIME_TAG}" \
-            --cache-from type=gha \
-            --cache-to type=gha,mode=max \
+            --cache-from type=registry,ref=ghcr.io/${{ github.repository_owner }}/nd_apps-shiny_serve:buildcache \
+            --cache-to type=registry,ref=ghcr.io/${{ github.repository_owner }}/nd_apps-shiny_serve:buildcache,mode=max \
             -f Dockerfile \
             -t ghcr.io/${{ github.repository_owner }}/nd_apps-shiny_serve:latest \
             -t ghcr.io/${{ github.repository_owner }}/nd_apps-shiny_serve:sha-${{ github.sha }} \
