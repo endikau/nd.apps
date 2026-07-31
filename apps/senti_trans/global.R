@@ -70,7 +70,7 @@ element_result_pending <- htmltools::tags$div(
     class="g-col-11 g-col-xl-7",
     htmltools::tags$p(
       htmltools::tags$strong(
-        style="color: #165a97;", "Noch kein aktuelles Ergebnis"
+        style="color: #5e80a2;", "Noch kein aktuelles Ergebnis"
       )
     ),
     htmltools::tags$p(htmltools::tags$span(stri_c(
