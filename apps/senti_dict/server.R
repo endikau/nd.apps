@@ -13,7 +13,18 @@ function(input, output, session) {
 
   .senti_dict_tbl_rct <- reactiveVal(vns.data::sentiws_tbl)
   .doc_str_rct <- reactiveVal(example_review)
+  .senti_dict_name_rct <- reactiveVal("SentiWS")
   .tok_senti_tbl_rct <- reactiveVal(.tok_senti_tbl_start)
+
+  # Weichen die aktuellen Eingaben von denen der letzten Analyse ab, passt das
+  # angezeigte Ergebnis nicht mehr dazu.
+  .result_pending_rct <- reactive({
+    !identical(input$input_doc_text %||% .doc_str_rct(), .doc_str_rct()) ||
+      !identical(
+        input$input_senti_dict %||% .senti_dict_name_rct(),
+        .senti_dict_name_rct()
+      )
+  })
 
   observeEvent(input$input_senti_dict, {
 
@@ -36,6 +47,7 @@ function(input, output, session) {
   observeEvent(input$input_doc_analyze, {
 
     .doc_str_rct(input$input_doc_text)
+    .senti_dict_name_rct(input$input_senti_dict)
 
     .tok_senti_tbl_rct(
       vns::calc_tok_sentidict_tbl(
@@ -51,8 +63,9 @@ function(input, output, session) {
 
   output$sentidict_score <- renderText({
 
+    if(.result_pending_rct()){return(element_result_pending)}
     if(is.null(.tok_senti_tbl_rct())){return(NULL)}
-    
+
     .tok_senti_tbl_rct() |>
       slice_min(doc_id, n=1, with_ties=TRUE) |>
       group_by(doc_id) |>
@@ -148,6 +161,12 @@ function(input, output, session) {
 
   output$sentidict_text <- renderText({
 
+    if(.result_pending_rct()){
+      return(stringi::stri_c(
+        "<div class='content-sec'><p lang='de'>Die Erläuterung erscheint, ",
+        "sobald Sie die geänderte Eingabe analysiert haben.</p></div>"
+      ))
+    }
     if(is.null(.tok_senti_tbl_rct())){return(NULL)}
 
     .tok_senti_tbl_rct() |>

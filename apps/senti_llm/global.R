@@ -90,6 +90,35 @@ random_review <- function() {
   })
 }
 
+# Steht im Ergebnisfeld, solange die aktuellen Eingaben noch nicht analysiert
+# wurden – sonst bliebe ein Ergebnis stehen, das nicht mehr dazu passt.
+element_result_pending <- htmltools::tags$div(
+  class = "grid p-3 pb-1",
+  htmltools::tags$div(
+    class = "g-col-1 g-start-xl-3 py-2",
+    htmltools::tags$img(
+      src = "assets/img/2753-blue.svg",
+      height = "55pt",
+      width = "55pt",
+      alt = ""
+    )
+  ),
+  htmltools::tags$div(
+    class = "g-col-11 g-col-xl-7",
+    htmltools::tags$p(
+      htmltools::tags$strong(
+        style = "color: #165a97;",
+        "Noch kein aktuelles Ergebnis"
+      )
+    ),
+    htmltools::tags$p(htmltools::tags$span(stri_c(
+      "Die Eingabe hat sich geändert. Klicken Sie auf „Analysieren“, um das ",
+      "Ergebnis zu aktualisieren."
+    )))
+  )
+) |>
+  as.character()
+
 # color_palette <- jsonlite::read_json(
 #   system.file("app", "sentiment_dict", "colors.json", package="endikau.apps")
 # )

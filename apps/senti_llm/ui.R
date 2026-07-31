@@ -114,14 +114,7 @@ element_output_result <- tags$div(
 
 shiny_ui <- nd.util::nd_app(
   tags$div(
-    tags$script(
-        "$(document).on('shiny:inputchanged', function(event) {
-          if (event.name === 'input_doc_analyze') {
-            Shiny.setInputValue(result_invalid, 1);;
-          }
-        });"
-      ),
-      element_input_doc,
+    element_input_doc,
       tags$div(
         class = "my-4",
         bslib::input_task_button(

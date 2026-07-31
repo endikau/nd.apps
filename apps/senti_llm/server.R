@@ -20,6 +20,12 @@ function(input, output, session) {
   .germansentiment_model_rct <- reactiveVal(NULL)
   .calc_doc_germansentiment_tbl_memo_rct <- reactiveVal(NULL)
 
+  # Weicht die aktuelle Eingabe von der der letzten Analyse ab, passt das
+  # angezeigte Ergebnis nicht mehr dazu.
+  .result_pending_rct <- reactive({
+    !identical(input$input_doc_text %||% .doc_str_rct(), .doc_str_rct())
+  })
+
   observeEvent(input$input_doc_random, {
     updateTextInput(
       session = session,
@@ -63,6 +69,9 @@ function(input, output, session) {
   ##############################################################################
 
   output$sentidict_score <- renderText({
+    if (.result_pending_rct()) {
+      return(element_result_pending)
+    }
     if (is.null(.doc_senti_tbl_rct())) {
       return(NULL)
     }
