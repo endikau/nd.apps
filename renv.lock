@@ -2325,6 +2325,7 @@
       "Encoding": "UTF-8",
       "Roxygen": "list(markdown = TRUE)",
       "Imports": [
+        "commonmark",
         "R6",
         "bslib",
         "curl",
@@ -2341,17 +2342,16 @@
         "stringi",
         "vns",
         "vctrs",
-        "xml2"
+        "xml2",
+        "yaml"
       ],
       "Config/roxygen2/version": "8.0.0",
-      "Author": "Moritz Pilarski [aut, cre]",
-      "Maintainer": "Moritz Pilarski <moritz.pilarski@example.com>",
       "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "endikau",
       "RemoteRepo": "nd.util",
       "RemoteRef": "main",
-      "RemoteSha": "ca0bbbb2c139ca701c20e7503340113c9b36945c",
-      "RemoteHost": "api.github.com"
+      "RemoteSha": "64d99642916154edd872a843b1c9dea0e9830263"
     },
     "openssl": {
       "Package": "openssl",
