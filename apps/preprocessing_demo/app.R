@@ -207,6 +207,17 @@ ui <- nd.util::nd_app(
              festen Werts, damit es der Theme-Groesse folgt. */
           font-size: 1em;
         }
+        .text-display-label {
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          color: var(--bs-secondary-color);
+          margin-bottom: 0.25rem;
+        }
+        .text-display-original pre {
+          color: var(--bs-secondary-color);
+        }
         .shiny-input-checkboxgroup .shiny-options-group .form-check {
           margin-bottom: .4rem;
         }
@@ -250,10 +261,19 @@ ui <- nd.util::nd_app(
       class = "card mt-4",
       tags$div(
         class = "card-header d-flex align-items-center justify-content-between gap-2",
-        "Beispieltext (verarbeitet)"
+        "Beispieltext"
       ),
       tags$div(
         class = "card-body",
+        # Vorher/Nachher: Original gedämpft oben, damit beim Anklicken der
+        # Schritte sichtbar bleibt, was sich gegenüber dem Rohtext ändert.
+        tags$div(class = "text-display-label", "Original"),
+        tags$div(
+          class = "text-display text-display-original text-break",
+          verbatimTextOutput("original_text")
+        ),
+        tags$hr(class = "my-3"),
+        tags$div(class = "text-display-label", "Nach der Vorverarbeitung"),
         tags$div(
           class = "text-display text-break",
           verbatimTextOutput("processed_text")
@@ -309,6 +329,8 @@ server <- function(input, output, session) {
     },
     ignoreInit = TRUE
   )
+
+  output$original_text <- renderText(current_text())
 
   output$processed_text <- renderText({
     txt <- preprocess_text(current_text(), input$steps)
